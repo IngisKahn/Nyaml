@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CAC59831-13FA-4478-B82A-DED3E08843F6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nyaml</RootNamespace>
+    <AssemblyName>Nyaml</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Composer.cs" />
+    <Compile Include="EquatableList.cs" />
+    <Compile Include="EquatableMap.cs" />
+    <Compile Include="Events\Alias.cs" />
+    <Compile Include="Events\CollectionEnd.cs" />
+    <Compile Include="Events\CollectionStart.cs" />
+    <Compile Include="Events\DocumentEnd.cs" />
+    <Compile Include="Events\DocumentStart.cs" />
+    <Compile Include="Events\Base.cs" />
+    <Compile Include="Events\MappingEnd.cs" />
+    <Compile Include="Events\MappingStart.cs" />
+    <Compile Include="Events\Node.cs" />
+    <Compile Include="Events\Scalar.cs" />
+    <Compile Include="Events\SequenceEnd.cs" />
+    <Compile Include="Events\SequenceStart.cs" />
+    <Compile Include="Events\StreamEnd.cs" />
+    <Compile Include="Events\StreamStart.cs" />
+    <Compile Include="FlowStyle.cs" />
+    <Compile Include="Kind.cs" />
+    <Compile Include="Mark.cs" />
+    <Compile Include="MarkedYamlError.cs" />
+    <Compile Include="Nodes\Collection.cs" />
+    <Compile Include="Nodes\Mapping.cs" />
+    <Compile Include="Nodes\Base.cs" />
+    <Compile Include="Nodes\Scalar.cs" />
+    <Compile Include="Nodes\Sequence.cs" />
+    <Compile Include="OrderedMap.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="Reader.cs" />
+    <Compile Include="ScalarImplicitLevel.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="Schemas\Core.cs" />
+    <Compile Include="Schemas\Failsafe.cs" />
+    <Compile Include="Schemas\Full.cs" />
+    <Compile Include="Schemas\Json.cs" />
+    <Compile Include="Schemas\Base.cs" />
+    <Compile Include="Serializer.cs" />
+    <Compile Include="Style.cs" />
+    <Compile Include="Tags\Binary.cs" />
+    <Compile Include="Tags\BooleanTag.cs" />
+    <Compile Include="Tags\FloatingPointTag.cs" />
+    <Compile Include="Tags\IntegerTag.cs" />
+    <Compile Include="Tags\IPathResolved.cs" />
+    <Compile Include="Tags\MappingTag.cs" />
+    <Compile Include="Tags\MergeTag.cs" />
+    <Compile Include="Tags\NonspecificTag.cs" />
+    <Compile Include="Tags\NullTag.cs" />
+    <Compile Include="Tags\OrderedMapTag.cs" />
+    <Compile Include="Tags\PairsTag.cs" />
+    <Compile Include="Tags\Scalar.cs" />
+    <Compile Include="Tags\SequenceTag.cs" />
+    <Compile Include="Tags\SetTag.cs" />
+    <Compile Include="Tags\StringTag.cs" />
+    <Compile Include="Tags\Base.cs" />
+    <Compile Include="Tags\TimestampTag.cs" />
+    <Compile Include="Tags\ValueTag.cs" />
+    <Compile Include="Tokens\Alias.cs" />
+    <Compile Include="Tokens\Anchor.cs" />
+    <Compile Include="Tokens\BlockEnd.cs" />
+    <Compile Include="Tokens\BlockEntry.cs" />
+    <Compile Include="Tokens\BlockMappingStart.cs" />
+    <Compile Include="Tokens\BlockSequenceStart.cs" />
+    <Compile Include="Tokens\Directive.cs" />
+    <Compile Include="Tokens\DocumentEnd.cs" />
+    <Compile Include="Tokens\DocumentStart.cs" />
+    <Compile Include="Tokens\FlowEntry.cs" />
+    <Compile Include="Tokens\FlowMappingEnd.cs" />
+    <Compile Include="Tokens\FlowMappingStart.cs" />
+    <Compile Include="Tokens\FlowSequenceEnd.cs" />
+    <Compile Include="Tokens\FlowSequenceStart.cs" />
+    <Compile Include="Tokens\Key.cs" />
+    <Compile Include="Tokens\Scalar.cs" />
+    <Compile Include="Tokens\SimpleValue.cs" />
+    <Compile Include="Tokens\StreamEnd.cs" />
+    <Compile Include="Tokens\StreamStart.cs" />
+    <Compile Include="Tokens\Tag.cs" />
+    <Compile Include="Tokens\Base.cs" />
+    <Compile Include="Tokens\Value.cs" />
+    <Compile Include="YamlError.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
