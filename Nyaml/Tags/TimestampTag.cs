@@ -52,7 +52,7 @@
                            time.Millisecond != 0 ? (time.Millisecond / 1000f).ToString("F", System.Globalization.CultureInfo.InvariantCulture).Substring(1) : "");
         }
 
-        protected override DateTime Construct(Nodes.Base node)
+        protected override DateTime Construct(Nodes.Base node, Constructor constructor)
         {
             return Parse(((Nodes.Scalar)node).Content);
         }

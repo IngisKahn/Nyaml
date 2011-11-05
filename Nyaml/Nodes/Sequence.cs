@@ -17,7 +17,7 @@ namespace Nyaml.Nodes
 
         public Sequence() { this.content = new List<Base>(); }
 
-        public Sequence(IList<Base> content) { this.content = content; }
+        //public Sequence(IList<Base> content) { this.content = content; }
 
         public override string Id
         {
@@ -45,6 +45,11 @@ namespace Nyaml.Nodes
         internal override void Serialize(Serializer serializer)
         {
             serializer.SerializeSequence(this, serializer.Schema.CanResolve(this, true));
+        }
+
+        internal override object Construct(Constructor constructor)
+        {
+            return this.SequenceTag.ConstructObject(this, constructor);
         }
     }
 }

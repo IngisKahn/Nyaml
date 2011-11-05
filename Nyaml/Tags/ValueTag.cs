@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Tags
 {
-    public class Value : Scalar<object>
+    public class Value : Scalar<string>
     {
         internal Value()
         {
@@ -17,14 +17,14 @@
             return node != null && node.Content == "=";
         }
 
-        protected override object Construct(Nodes.Base node)
+        protected override string Construct(Nodes.Base node, Constructor constructor)
         {
-            throw new System.InvalidOperationException();
+            return ((Nodes.Scalar)node).Content;
         }
 
-        public override Nodes.Base Represent(object value)
+        public override Nodes.Base Represent(string value)
         {
-            throw new System.InvalidOperationException();
+            return new Nodes.Scalar<string> { ScalarTag = this, Content = "="};
         }
     }
 }

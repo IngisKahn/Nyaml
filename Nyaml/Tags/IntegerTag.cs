@@ -127,7 +127,7 @@
             return node != null && intExpression.IsMatch(node.Content);
         }
 
-        protected override BigInteger Construct(Nodes.Base node)
+        protected override BigInteger Construct(Nodes.Base node, Constructor constructor)
         {
             return BigInteger.Parse(this.CanonicalFormatter(((Nodes.Scalar)node).Content));
         }

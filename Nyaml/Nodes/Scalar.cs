@@ -50,5 +50,10 @@ namespace Nyaml.Nodes
         {
             return base.GetHashCode() ^ this.ScalarTag.CanonicalFormatter(this.Content).GetHashCode();
         }
+
+        internal override object Construct(Constructor constructor)
+        {
+            return this.ScalarTag.AsValue(this, constructor);
+        }
     }
 }

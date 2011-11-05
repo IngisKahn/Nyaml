@@ -17,7 +17,7 @@
             return true;
         }
 
-        protected override string Construct(Nodes.Base node)
+        protected override string Construct(Nodes.Base node, Constructor constructor)
         {
             return ((Nodes.Scalar)node).Content;
         }

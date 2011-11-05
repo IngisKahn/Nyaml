@@ -21,7 +21,7 @@
             return node != null && nullExpression.IsMatch(node.Content);
         }
 
-        protected override object Construct(Nodes.Base node)
+        protected override object Construct(Nodes.Base node, Constructor constructor)
         {
             return null;
         }

@@ -22,7 +22,7 @@
             return node != null && booleanExpression.IsMatch(node.Content);
         }
 
-        protected override bool Construct(Nodes.Base node)
+        protected override bool Construct(Nodes.Base node, Constructor constructor)
         {
             return this.CanonicalFormatter(((Nodes.Scalar)node).Content) == "y";
         }

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Pairs : Sequence<List<Tuple<Nodes.Base, Nodes.Base>>>
+    public sealed class Pairs : Sequence<List<Tuple<object, object>>>
     {
         internal Pairs() : base("tag:yaml.org,2002:pairs")
         { }
@@ -19,23 +19,24 @@
                 .All(map => map != null && map.Content.Count == 1);
         }
 
-        protected override List<Tuple<Nodes.Base, Nodes.Base>> Construct(Nodes.Base node)
+        protected override List<Tuple<object, object>> Construct(Nodes.Base node, Constructor constructor)
         {
             return ((Nodes.Sequence) node).Content
                 .Select(item => ((Nodes.Mapping) item).Content.First())
-                .Select(kvp => Tuple.Create(kvp.Key, kvp.Value))
+                .Select(kvp => Tuple.Create((object)kvp.Key, (object)kvp.Value))
                 .ToList();
         }
 
-        public override Nodes.Base Represent(List<Tuple<Nodes.Base, Nodes.Base>> value)
+        public override Nodes.Base Represent(List<Tuple<object, object>> value)
         {
-            var list = new List<Nodes.Base>(value.Count);
-            var result = new Nodes.Sequence(list) { SequenceTag = this };
+            var result = new Nodes.Sequence { SequenceTag = this };
+            var list = result.Content;   
             foreach (var item in value)
             {
-                var d = new Dictionary<Nodes.Base, Nodes.Base>(1);
-                list.Add(new Nodes.Mapping(d) { MappingTag = new Mapping() });
-                d.Add(item.Item1, item.Item2);
+                //var d = new Dictionary<Nodes.Base, Nodes.Base>(1);
+                var m = new Nodes.Mapping { MappingTag = new Mapping() };
+                list.Add(m);
+                m.Content.Add((Nodes.Base)item.Item1, (Nodes.Base)item.Item2);
             }
             return result;
         }

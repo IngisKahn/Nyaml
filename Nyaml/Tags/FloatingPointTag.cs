@@ -118,7 +118,7 @@
             return node != null && floatExpression.IsMatch(node.Content);
         }
 
-        protected override double Construct(Nodes.Base node)
+        protected override double Construct(Nodes.Base node, Constructor constructor)
         {
             var content = this.CanonicalFormatter(((Nodes.Scalar)node).Content);
             switch (content)

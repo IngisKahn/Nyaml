@@ -1,6 +1,7 @@
 ﻿namespace Nyaml.Schemas
 {
     using System.Collections.Generic;
+    using Tags;
 
     public abstract class Base
     {
@@ -67,16 +68,22 @@
                 get { throw new System.NotImplementedException(); }
             }
 
-            public SimpleScalar(Tags.Base tag, string content)
+            public SimpleScalar(Tags.Base tag, string content, Style style)
             {
-                this.tag = tag;
+                this.tag = tag ?? new Nonspecific(style == Style.Literal);
                 this.Content = content;
+                this.Style = Style.Folded;
+            }
+
+            internal override object Construct(Constructor constructor)
+            {
+                throw new System.NotImplementedException();
             }
         }
 
-        public Nodes.Scalar CreateScalarNode(string tagName, string value)
+        public Nodes.Scalar CreateScalarNode(string tagName, string value, Style style)
         {
-            var tag = this.Resolve(new SimpleScalar(this.GetTag(tagName), value));
+            var tag = this.Resolve(new SimpleScalar(this.GetTag(tagName), value, style));
             var node = (Nodes.Scalar)tag.Compose();
             node.Content = value;
             return node;

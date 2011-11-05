@@ -12,7 +12,7 @@
             return true;
         }
 
-        protected override object Construct(Nodes.Base node)
+        protected override object Construct(Nodes.Base node, Constructor constructor)
         {
             throw new System.InvalidOperationException();
         }

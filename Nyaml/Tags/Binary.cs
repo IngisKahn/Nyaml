@@ -33,7 +33,7 @@
             return node != null && base64Expression.IsMatch(node.Content);
         }
 
-        protected override byte[] Construct(Nodes.Base node)
+        protected override byte[] Construct(Nodes.Base node, Constructor constructor)
         {
             return System.Convert.FromBase64String(this.CanonicalFormatter(((Nodes.Scalar)node).Content));
         }

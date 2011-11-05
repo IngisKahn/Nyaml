@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Tags
 {
-    using System.Collections.Generic;
+    using System.Collections;
 
     public abstract class Sequence<T> : Base<T>
     {
@@ -25,20 +25,27 @@
         }
     }
 
-    public class Sequence : Sequence<IList<Nodes.Base>>
+    public class Sequence : Sequence<IList>
     {
         protected internal Sequence() : base("tag:yaml.org,2002:seq")
         {
         }
 
-        protected override IList<Nodes.Base> Construct(Nodes.Base node)
+        protected override IList Construct(Nodes.Base node, Constructor constructor)
         {
-            return ((Nodes.Sequence)node).Content;
+            var snode = (Nodes.Sequence) node;
+            var list = new ArrayList(snode.Content.Count);
+            foreach (var subnode in snode.Content)
+                list.Add(constructor.ConstructObject(subnode));
+            return list;
         }
 
-        public override Nodes.Base Represent(IList<Nodes.Base> value)
+        public override Nodes.Base Represent(IList value)
         {
-            return new Nodes.Sequence(value) { SequenceTag = this };
+            var s = new Nodes.Sequence { SequenceTag = this };
+            foreach (var n in value)
+                s.Content.Add((Nodes.Base)n);
+            return s;
         }
     }
 }

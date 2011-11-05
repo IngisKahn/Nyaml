@@ -17,7 +17,7 @@ namespace Nyaml.Nodes
 
         public Mapping() { this.content = new Dictionary<Base, Base>(); }
 
-        internal Mapping(Dictionary<Base, Base> content) { this.content = content; }
+        //internal Mapping(Dictionary<Base, Base> content) { this.content = content; }
 
         public override bool Equals(object obj)
         {
@@ -51,6 +51,11 @@ namespace Nyaml.Nodes
         internal override void Serialize(Serializer serializer)
         {
             serializer.SerializeMapping(this, serializer.Schema.CanResolve(this, true));
+        }
+
+        internal override object Construct(Constructor constructor)
+        {
+            return this.MappingTag.ConstructObject(this, constructor);
         }
     }
 }

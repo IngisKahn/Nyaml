@@ -1,6 +1,7 @@
 ﻿namespace Nyaml.Tags
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Collections;
 
     public abstract class Mapping<T> : Base<T>
     {
@@ -25,20 +26,29 @@
         }
     }
 
-    public sealed class Mapping : Mapping<Dictionary<Nodes.Base, Nodes.Base>>
+    public sealed class Mapping : Mapping<IDictionary>
     {
         internal Mapping()
             : base("tag:yaml.org,2002:map")
         {}
 
-        protected override Dictionary<Nodes.Base, Nodes.Base> Construct(Nodes.Base node)
+        protected override IDictionary Construct(Nodes.Base node, Constructor constructor)
         {
-            return ((Nodes.Mapping)node).Content;
+            var mnode = (Nodes.Mapping) node;
+            var result = new Hashtable(mnode.Content.Count);
+            foreach (var kvp in mnode.Content)
+            {
+                var key = constructor.ConstructObject(kvp.Key);
+                var value = constructor.ConstructObject(kvp.Value);
+                result.Add(key, value);
+            }
+            return result;
         }
 
-        public override Nodes.Base Represent(Dictionary<Nodes.Base, Nodes.Base> value)
+        public override Nodes.Base Represent(IDictionary value)
         {
-            return new Nodes.Mapping(value) { MappingTag = this };
+            throw new NotImplementedException();
+            //return new Nodes.Mapping(value) { MappingTag = this };
         }
     } 
 }

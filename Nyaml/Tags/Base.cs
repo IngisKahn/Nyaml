@@ -23,17 +23,24 @@
         internal abstract bool Validate(Nodes.Base node);
 
         internal abstract Nodes.Base Compose();
+
+        internal abstract object ConstructObject(Nodes.Base node, Constructor constructor);
     }
 
     public abstract class Base<T> : Base
     {
 
-        public T AsValue(Nodes.Base node)
+        public T AsValue(Nodes.Base node, Constructor constructor)
         {
-            return this.Validate(node) ? this.Construct(node) : default(T);
+            return this.Validate(node) ? (T)this.Construct(node, constructor) : default(T);
         }
 
-        protected abstract T Construct(Nodes.Base node);
+        internal override object ConstructObject(Nodes.Base node, Constructor constructor)
+        {
+            return this.Construct(node, constructor);
+        }
+
+        protected abstract T Construct(Nodes.Base node, Constructor constructor);
 
         public abstract Nodes.Base Represent(T value);
     }

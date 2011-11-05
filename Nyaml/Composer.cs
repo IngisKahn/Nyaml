@@ -123,10 +123,9 @@
         private Nodes.Scalar ComposeScalarNode(string anchor)
         {
             var @event = (Events.Scalar)this.GetEvent();
-            var node = this.schema.CreateScalarNode(@event.Tag, @event.Value);
+            var node = this.schema.CreateScalarNode(@event.Tag, @event.Value, @event.Style);
             node.StartMark = @event.StartMark;
             node.EndMark = @event.EndMark;
-            node.Style = @event.Style;
             if (anchor != null)
                 this.anchors[anchor] = node;
             return node;
@@ -145,7 +144,8 @@
             var index = 0;
             while (!this.CheckEvent<Events.SequenceEnd>())
             {
-                node.Content.Add(this.ComposeNode(() => this.schema.DescendResolver(node, index)));
+                int index1 = index;
+                node.Content.Add(this.ComposeNode(() => this.schema.DescendResolver(node, index1)));
                 index++;
             }
             var endEvent = (Events.SequenceEnd) this.GetEvent();
@@ -158,8 +158,8 @@
         private Nodes.Mapping ComposeMappingNode(string anchor)
         {
             var startEvent = (Events.MappingStart)this.GetEvent();
-            var node = new Nodes.Mapping()
-            {
+            var node = new Nodes.Mapping
+                       {
                 StartMark = startEvent.StartMark,
                 FlowStyle = startEvent.FlowStyle
             };
