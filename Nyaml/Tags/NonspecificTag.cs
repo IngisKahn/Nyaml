@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Tags
 {
-    internal sealed class Nonspecific : Base<object>
+    internal sealed class Nonspecific : Base<object, object>
     {
         internal Nonspecific(bool isSimpleType)
         {
@@ -17,7 +17,7 @@
             throw new System.InvalidOperationException();
         }
 
-        public override Nodes.Base Represent(object value)
+        public override Nodes.Base Represent(object value, Representer representer)
         {
             throw new System.InvalidOperationException();
         }

@@ -71,6 +71,7 @@
     <Compile Include="OrderedMap.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Reader.cs" />
+    <Compile Include="Representer.cs" />
     <Compile Include="ScalarImplicitLevel.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Schemas\Core.cs" />

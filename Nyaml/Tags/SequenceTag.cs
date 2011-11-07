@@ -2,8 +2,12 @@
 {
     using System.Collections;
 
-    public abstract class Sequence<T> : Base<T>
+    public abstract class Sequence<TConstruct, TRepresent> : Base<TConstruct, TRepresent> 
+        where TConstruct : IList, new()
+        where TRepresent : IEnumerable
     {
+        public Sequence() : this("tag:yaml.org,2002:seq") { }
+
         protected Sequence(string name)
         {
             this.Name = name;
@@ -23,24 +27,17 @@
         {
             return new Nodes.Sequence { SequenceTag = this };
         }
-    }
 
-    public class Sequence : Sequence<IList>
-    {
-        protected internal Sequence() : base("tag:yaml.org,2002:seq")
+        protected override TConstruct Construct(Nodes.Base node, Constructor constructor)
         {
-        }
-
-        protected override IList Construct(Nodes.Base node, Constructor constructor)
-        {
-            var snode = (Nodes.Sequence) node;
-            var list = new ArrayList(snode.Content.Count);
+            var snode = (Nodes.Sequence)node;
+            var list = new TConstruct();
             foreach (var subnode in snode.Content)
                 list.Add(constructor.ConstructObject(subnode));
             return list;
         }
 
-        public override Nodes.Base Represent(IList value)
+        public override Nodes.Base Represent(TRepresent value, Representer representer)
         {
             var s = new Nodes.Sequence { SequenceTag = this };
             foreach (var n in value)
@@ -48,4 +45,6 @@
             return s;
         }
     }
+
+    public sealed class Sequence : Sequence<ArrayList, IEnumerable> { }
 }

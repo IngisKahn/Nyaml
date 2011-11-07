@@ -1,9 +1,10 @@
 ﻿namespace Nyaml.Tags
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Set : Mapping<HashSet<object>>
+    public sealed class Set : Mapping<HashSet<object>, ISet<object>>
     {
         internal Set() : base("tag:yaml.org,2002:set")
         { }
@@ -25,12 +26,12 @@
             return set;
         }
 
-        public override Nodes.Base Represent(HashSet<object> value)
+        public override Nodes.Base Represent(ISet<object> value, Representer representer)
         {
             var m = new Nodes.Mapping { MappingTag = this };
             var d = m.Content;
             foreach (var item in value)
-                d.Add((Nodes.Base)item, new Nodes.Scalar<object> { Content = null, ScalarTag = new Null() } );
+                d.Add((Nodes.Base)item, new Nodes.Scalar { Content = null, ScalarTag = new Null() } );
             return m;
         }
     }

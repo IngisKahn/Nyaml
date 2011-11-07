@@ -19,9 +19,9 @@
             private static string MakeMessage(string name, int position, int character, string encoding, string reason)
             {
                 if (character <= char.MaxValue)
-                    return string.Format("'{0}' codec can't decode byte #x{1:2X}: {2}\n  in \"{3}\", position {4}",
+                    return string.Format("'{0}' codec can't decode byte #x{1:X2}: {2}\n  in \"{3}\", position {4}",
                                          encoding, character, reason, name, position);
-                return string.Format("unacceptable character #x{0:4X}: {1}\n  in \"{2}\", position {3}",
+                return string.Format("unacceptable character #x{0:X4}: {1}\n  in \"{2}\", position {3}",
                                          character, reason, name, position);
             }
         }
@@ -53,14 +53,14 @@
         {
             this.name = "<byte string>";
             this.memoryStream = new MemoryStream(data);
-            this.streamReader = new StreamReader(this.memoryStream, Encoding.Default);
+            this.streamReader = new StreamReader(this.memoryStream, Encoding.UTF8);
             this.buffer = new StringBuilder();
             this.DetermineEncoding();
         }
 
         public Reader(Stream stream)
         {
-            this.streamReader = new StreamReader(stream, Encoding.Default);
+            this.streamReader = new StreamReader(stream, Encoding.UTF8);
             this.name = "<stream>";
             this.buffer = new StringBuilder();
             this.DetermineEncoding();
@@ -80,7 +80,7 @@
         {
             if (this.pointer + length >= this.buffer.Length)
                 this.Update(length);
-            return this.buffer.ToString(this.pointer, this.pointer + length);
+            return this.buffer.ToString(this.pointer, length);
         }
 
         private static readonly HashSet<char> newLineChars = 
@@ -135,7 +135,7 @@
                 return;
             var character = match.Groups[0].Captures[0].Value[0];
             var position = this.Index + (this.buffer.Length - this.pointer) + match.Index;
-            throw new Error(this.name, position, character, this.Encoding.EncodingName, "special characters are not allowed");
+            throw new Error(this.name, position, character, this.Encoding != null ? this.Encoding.EncodingName : "unknown", "special characters are not allowed");
         }
 
         private void Update(int length)
@@ -149,7 +149,6 @@
                 if (this.isEof)
                     this.buffer.Append('\0');
             }
-            this.CheckPrintable(this.buffer.ToString(this.pointer, Math.Min(this.buffer.Length - this.pointer, length)));
         }
 
         private void UpdateRaw(int size = 4096)
@@ -159,6 +158,7 @@
             this.buffer.Append(temp, 0, read);
             if (read < size)
                 this.isEof = true;
+            this.CheckPrintable(this.buffer.ToString(this.buffer.Length - read, read));
         }
 
         protected virtual void Dispose(bool isDisposing)

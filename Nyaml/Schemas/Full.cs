@@ -8,11 +8,13 @@
         {
             this.AddTag(new Tags.Binary());
             this.AddTag(new Tags.Merge());
-            this.AddTag(new Tags.OrderedMap());
+            var omTag = new Tags.OrderedMap();
+            this.AddTag(omTag, false);
+            this.AddTagType<IOrderedMap>(omTag);
             this.AddTag(new Tags.Pairs());
             this.AddTag(new Tags.Set());
             this.AddTag(new Tags.Timestamp());
-            this.AddTag(new Tags.Value());
+            this.AddTag(new Tags.Value(), false);
         }
 
         protected override Tags.Base ResolveSpecific(Nodes.Base node)

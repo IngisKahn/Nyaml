@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Tags
 {
-    public class Merge : Scalar<object>
+    public class Merge : Scalar<object, object>
     {
         internal Merge()
         {
@@ -22,7 +22,7 @@
             throw new System.InvalidOperationException();
         }
 
-        public override Nodes.Base Represent(object value)
+        public override Nodes.Base Represent(object value, Representer representer)
         {
             throw new System.InvalidOperationException();
         }

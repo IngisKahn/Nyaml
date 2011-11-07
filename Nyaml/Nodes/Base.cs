@@ -27,7 +27,5 @@
         }
 
         internal abstract void Serialize(Serializer serializer);
-
-        internal abstract object Construct(Constructor constructor);
     }
 }

@@ -25,14 +25,15 @@
         internal abstract Nodes.Base Compose();
 
         internal abstract object ConstructObject(Nodes.Base node, Constructor constructor);
+        internal abstract Nodes.Base RepresentObject(object data, Representer representer);
     }
 
-    public abstract class Base<T> : Base
+    public abstract class Base<TConstruct, TRepresent> : Base
     {
 
-        public T AsValue(Nodes.Base node, Constructor constructor)
+        public TConstruct AsValue(Nodes.Base node, Constructor constructor)
         {
-            return this.Validate(node) ? (T)this.Construct(node, constructor) : default(T);
+            return this.Validate(node) ? this.Construct(node, constructor) : default(TConstruct);
         }
 
         internal override object ConstructObject(Nodes.Base node, Constructor constructor)
@@ -40,8 +41,18 @@
             return this.Construct(node, constructor);
         }
 
-        protected abstract T Construct(Nodes.Base node, Constructor constructor);
+        protected abstract TConstruct Construct(Nodes.Base node, Constructor constructor);
 
-        public abstract Nodes.Base Represent(T value);
+        internal override Nodes.Base RepresentObject(object data, Representer representer)
+        {
+            return this.Represent((TRepresent)data, representer);
+        }
+
+        public abstract Nodes.Base Represent(TRepresent value, Representer representer);
+
+        internal virtual bool IgnoreAliases(TRepresent data)
+        {
+            return false;
+        }
     }
 }

@@ -1,10 +1,12 @@
 ﻿namespace Nyaml.Schemas
 {
+    using System;
     using System.Collections.Generic;
-    using Tags;
 
     public abstract class Base
     {
+        private readonly Dictionary<Type, Tags.Base> tagsByType =
+            new Dictionary<Type, Tags.Base>();
         private readonly Dictionary<string, Tags.Base> tags = 
             new Dictionary<string, Tags.Base>();
         public IEnumerable<Tags.Base> Tags { get { return this.tags.Values; } }
@@ -23,11 +25,26 @@
 
         // TODO: Implement path resolution according to YPath spec
 
-        public void AddTag<T>(T tag) where T : Tags.Base { this.tags.Add(tag.Name, tag); }
+        public void AddTag<TConstruct, TRepresent>(Tags.Base<TConstruct, TRepresent> tag, bool addType = true)
+        {
+            this.tags.Add(tag.Name, tag);
+            if (addType)
+                this.tagsByType.Add(typeof(TRepresent), tag);
+        }
+
+        public void AddTagType<T>(Tags.Base tag)
+        {
+            this.tagsByType.Add(typeof(T), tag);
+        }
 
         public bool CanResolve(Nodes.Base node, bool isImplicit)
         {
             return node.Tag.Equals(this.ResolveTag(node, new Tags.Nonspecific(isImplicit)));
+        }
+
+        public Tags.Base Resolve<T>()
+        {
+            throw new NotImplementedException();
         }
         
         public Tags.Base Resolve(Nodes.Base node)
@@ -62,22 +79,17 @@
 #region Scalar Node Creation
         private class SimpleScalar : Nodes.Scalar
         {
-            private Tags.Base tag;
+            private readonly Tags.Base tag;
             public override Tags.Base Tag
             {
-                get { throw new System.NotImplementedException(); }
+                get { return this.tag; }
             }
 
             public SimpleScalar(Tags.Base tag, string content, Style style)
             {
-                this.tag = tag ?? new Nonspecific(style == Style.Literal);
+                this.tag = tag ?? new Tags.Nonspecific(style == Style.Literal);
                 this.Content = content;
                 this.Style = Style.Folded;
-            }
-
-            internal override object Construct(Constructor constructor)
-            {
-                throw new System.NotImplementedException();
             }
         }
 
@@ -108,6 +120,18 @@
         public void DescendResolver()
         {
             // TODO: path resolution
+        }
+
+        internal Nodes.Base Represent<T>(T data, Representer representer)
+        {
+            Tags.Base tag;
+            return !this.tagsByType.TryGetValue(typeof(T), out tag) 
+                ? null : tag.RepresentObject(data, representer);
+        }
+
+        internal bool IgnoreAliases<T>(T data)
+        {
+            return typeof(T).IsPrimitive;
         }
     }
 }

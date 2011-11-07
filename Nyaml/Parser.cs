@@ -5,7 +5,26 @@
     using System.Diagnostics;
     using System.Linq;
 
-    public class Parser
+    public interface IParser
+    {
+        void Reset();
+
+        bool CheckEvent();
+
+        bool CheckEvent<T>() where T : Events.Base;
+
+        bool CheckEvent<T1, T2, T3, T4>()
+            where T1 : Events.Base
+            where T2 : Events.Base
+            where T3 : Events.Base
+            where T4 : Events.Base;
+
+        Events.Base PeekEvent();
+
+        Events.Base GetEvent();
+    }
+
+    public class Parser : IParser
     {
         [Serializable]
         public class Error : MarkedYamlError
@@ -30,9 +49,9 @@
         private readonly Stack<Mark> marks = new Stack<Mark>();
         private Func<Events.Base> state;
 
-        private readonly Scanner scanner;
+        private readonly IScanner scanner;
 
-        public Parser(Scanner scanner)
+        public Parser(IScanner scanner)
         {
             this.scanner = scanner;
             this.state = this.ParseStreamStart;

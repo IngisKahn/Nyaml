@@ -3,7 +3,7 @@
     using System;
     using System.Text.RegularExpressions;
 
-    public class Timestamp : Scalar<DateTime>
+    public class Timestamp : Scalar<DateTime, DateTime>
     {
         internal Timestamp()
         {
@@ -57,6 +57,7 @@
             return Parse(((Nodes.Scalar)node).Content);
         }
 
-        public override Nodes.Base Represent(DateTime value) { return new Nodes.Scalar<DateTime> { ScalarTag = this, Content = ToString(value) }; }
+        public override Nodes.Base Represent(DateTime value, Representer representer) 
+        { return new Nodes.Scalar { ScalarTag = this, Content = ToString(value) }; }
     }
 }

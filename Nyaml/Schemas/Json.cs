@@ -8,8 +8,19 @@
         {
             this.AddTag(new Tags.Null());
             this.AddTag(new Tags.Boolean());
-            this.AddTag(new Tags.Integer());
-            this.AddTag(new Tags.FloatingPoint());
+            var intTag = new Tags.Integer();
+            this.AddTag(intTag);
+            this.AddTagType<byte>(intTag);
+            this.AddTagType<sbyte>(intTag);
+            this.AddTagType<short>(intTag);
+            this.AddTagType<ushort>(intTag);
+            this.AddTagType<long>(intTag);
+            this.AddTagType<ulong>(intTag);
+            this.AddTagType<int>(intTag);
+            this.AddTagType<uint>(intTag);
+            var floatTag = new Tags.FloatingPoint();
+            this.AddTag(floatTag);
+            this.AddTagType<float>(floatTag);
         }
 
         static readonly Regex intExpression = 

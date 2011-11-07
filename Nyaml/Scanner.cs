@@ -7,13 +7,41 @@
     using System.Linq;
     using System.Text;
 
-    public class Scanner
+    public interface IScanner
+    {
+        bool CheckToken();
+
+        bool CheckToken<T>() where T : Tokens.Base;
+
+        bool CheckToken<T1, T2>()
+            where T1 : Tokens.Base
+            where T2 : Tokens.Base;
+
+        bool CheckToken<T1, T2, T3>()
+            where T1 : Tokens.Base
+            where T2 : Tokens.Base
+            where T3 : Tokens.Base;
+
+        bool CheckToken<T1, T2, T3, T4>()
+            where T1 : Tokens.Base
+            where T2 : Tokens.Base
+            where T3 : Tokens.Base
+            where T4 : Tokens.Base;
+
+        Tokens.Base PeekToken();
+
+        Tokens.Base GetToken();
+
+        T GetToken<T>() where T : Tokens.Base;
+    }
+
+    public class Scanner : IScanner
     {
         [Serializable]
         public class Error : MarkedYamlError
         {
             public Error(string context = null, Mark contextMark = null,
-            string problem = null, Mark problemMark = null, string note = null) 
+            string problem = null, Mark problemMark = null, string note = null)
                 : base(context, contextMark, problem, problemMark, note)
             { }
         }
@@ -36,7 +64,7 @@
         private readonly Stack<int> indents = new Stack<int>();
 
         private bool allowSimpleKey = true;
-        private readonly Dictionary<int, SimpleKey>  possibleSimpleKeys = new Dictionary<int,SimpleKey>();
+        private readonly Dictionary<int, SimpleKey> possibleSimpleKeys = new Dictionary<int, SimpleKey>();
 
         private readonly Reader reader;
 
@@ -46,10 +74,10 @@
             this.FetchStreamStart();
         }
 
-        private int Index { get { return this.reader.Index;  } }
-        private int Line { get { return this.reader.Line;  } }
-        private int Column { get { return this.reader.Column;  } }
-        private Mark Mark { get { return this.reader.Mark;  } }
+        private int Index { get { return this.reader.Index; } }
+        private int Line { get { return this.reader.Line; } }
+        private int Column { get { return this.reader.Column; } }
+        private Mark Mark { get { return this.reader.Mark; } }
 
         private char Peek(int index = 0)
         {
@@ -100,8 +128,8 @@
             where T3 : Tokens.Base
             where T4 : Tokens.Base
         {
-            return this.CheckToken() && 
-                (  this.tokens[0] is T1
+            return this.CheckToken() &&
+                (this.tokens[0] is T1
                 || this.tokens[0] is T2
                 || this.tokens[0] is T3
                 || this.tokens[0] is T4
@@ -128,7 +156,7 @@
                 return null;
             this.tokensTaken++;
             var result = this.tokens[0] as T;
-            if (result != null) 
+            if (result != null)
                 this.tokens.RemoveAt(0);
             return result;
         }
@@ -256,7 +284,7 @@
             }
 
             throw new Error("while scanning for the next token", null,
-                string.Format("found character {0} that cannot start any token", ch), 
+                string.Format("found character {0} that cannot start any token", ch),
                 this.Mark);
         }
 
@@ -322,7 +350,7 @@
 
         private void UnwindIndent(int column)
         {
-            if (this.flowLevel == 0)
+            if (this.flowLevel != 0)
                 return;
             while (this.indentLevel > column)
             {
@@ -668,7 +696,7 @@
                 while (this.Peek() == ' ')
                     this.Forward();
                 if (this.Peek() == '#')
-                    while ("\0 \t\r\n\x85\u2028\u2029".IndexOf(this.Peek(1)) == -1)
+                    while ("\0\r\n\x85\u2028\u2029".IndexOf(this.Peek()) == -1)
                         this.Forward();
                 if (this.ScanLineBreak().Length != 0)
                 {
@@ -716,9 +744,9 @@
         {
             var length = 0;
             var ch = this.Peek(length);
-            while (Between('0', ch, '9') || 
-                   Between('A', ch, 'Z') || 
-                   Between('a', ch, 'z') || 
+            while (Between('0', ch, '9') ||
+                   Between('A', ch, 'Z') ||
+                   Between('a', ch, 'z') ||
                    ch == '-' || ch == '_')
             {
                 length++;
@@ -727,7 +755,7 @@
 
             if (length == 0)
                 throw new Error("while scanning a directive", start,
-                    "expected an alpha-numeric character, but found " + ch, 
+                    "expected an alpha-numeric character, but found " + ch,
                     this.Mark);
             var value = this.Prefix(length);
             this.Forward(length);
@@ -847,7 +875,7 @@
                 throw new Error("while scanning an " + name, start,
                     "expected an alpha-numeric character, but found " + ch,
                     this.Mark);
-            return new T { Value =  value, StartMark = start, EndMark = this.Mark };
+            return new T { Value = value, StartMark = start, EndMark = this.Mark };
         }
 
         private Tokens.Tag ScanTag()
@@ -962,7 +990,7 @@
             if (chomping.HasValue && chomping.Value)
                 chunks.AddRange(breaks);
 
-            return new Tokens.Scalar { Value = string.Join("", chunks)};
+            return new Tokens.Scalar { Value = string.Join("", chunks) };
         }
 
         private void ScanBlockScalarIndicators(Mark start, out bool? chomping, out int? increment)
@@ -970,7 +998,7 @@
             chomping = null;
             increment = null;
             var ch = this.Peek();
-            if (ch == '+' || ch =='-')
+            if (ch == '+' || ch == '-')
             {
                 chomping = ch == '+';
                 this.Forward();
@@ -1033,8 +1061,8 @@
             chunks = new List<string>();
             maxIndent = 0;
             end = this.Mark;
-            var ch = this.Peek();
-            while (" \r\n\x85\u2028\u2029".IndexOf(ch) != -1)
+            char ch;
+            while (" \r\n\x85\u2028\u2029".IndexOf(ch = this.Peek()) != -1)
             {
                 if (ch != ' ')
                 {
@@ -1098,14 +1126,14 @@
                 {'e', '\x1B'},
                 {' ', '\x20'},
                 {'"', '"'},
-                {'\'', '\''},
+                {'\\', '\\'},
                 {'N', '\x85'},
                 {'_', '\xA0'},
                 {'L', '\u2028'},
                 {'P', '\u2029'}
             };
 
-        private readonly Dictionary<char, int> escapeCodes = 
+        private readonly Dictionary<char, int> escapeCodes =
             new Dictionary<char, int>
             {
                 {'x', 2},
@@ -1116,10 +1144,10 @@
         private IEnumerable<string> ScanFlowScalarNonSpaces(bool isDouble, Mark start)
         {
             var chunks = new List<string>();
-            for (;;)
+            for (; ; )
             {
                 var length = 0;
-                while ("'\"\\\0 \t\r\n\x85\u2028\u2029".IndexOf(this.Peek()) == -1)
+                while ("'\"\\\0 \t\r\n\x85\u2028\u2029".IndexOf(this.Peek(length)) == -1)
                     length++;
                 if (length > 0)
                 {
@@ -1151,14 +1179,12 @@
                     {
                         this.Forward();
                         for (var k = 0; k < length; k++)
-                        {
                             if ("0123456789ABCDEFabcdef".IndexOf(this.Peek(k)) == -1)
                                 throw new Error("while scanning a double-quoted scalar", start,
                                             string.Format("expected an escape sequence of {0} hex numbers, but found {1}", length, this.Peek(k)),
                                             this.Mark);
-                            chunks.Add(int.Parse(this.Prefix(length), NumberStyles.AllowHexSpecifier).ToString());
-                            this.Forward(length);
-                        }
+                        chunks.Add(int.Parse(this.Prefix(length), NumberStyles.AllowHexSpecifier).ToString());
+                        this.Forward(length);
                     }
                     else if ("\r\n\x85\u2028\u2029".IndexOf(ch) != -1)
                     {
@@ -1190,8 +1216,11 @@
                     throw new Error("while scanning a quoted scalar", start,
                                     "found unexpected end of stream",
                                     this.Mark);
-                case '\r': case '\n':
-                case '\x85': case '\u2028': case '\u2029':
+                case '\r':
+                case '\n':
+                case '\x85':
+                case '\u2028':
+                case '\u2029':
                     var lineBreak = this.ScanLineBreak();
                     var breaks = this.ScanFlowScalarBreaks(start);
                     chunks.Add(lineBreak != "\n" ? lineBreak : " ");
@@ -1207,7 +1236,7 @@
         private IEnumerable<string> ScanFlowScalarBreaks(Mark start)
         {
             var chunks = new List<string>();
-            for (;;)
+            for (; ; )
             {
                 var prefix = this.Prefix(3);
                 if ((prefix == "---" || prefix == "...")
@@ -1232,13 +1261,13 @@
             var indent = this.indentLevel + 1;
             var spaces = new List<string>();
 
-            for (;;)
+            for (; ; )
             {
                 var length = 0;
                 if (this.Peek() == '#')
                     break;
                 char ch;
-                for (;;)
+                for (; ; )
                 {
                     ch = this.Peek(length);
                     if ("\0 \t\r\n\x85\u2028\u2029".IndexOf(ch) != -1
@@ -1320,15 +1349,15 @@
         {
             var ch = this.Peek();
             if (ch != '!')
-                    throw new Error("while scanning a " + name, start,
-                                    "expected '!', but found " + ch,
-                                    this.Mark);
+                throw new Error("while scanning a " + name, start,
+                                "expected '!', but found " + ch,
+                                this.Mark);
             var length = 1;
             ch = this.Peek(length);
             if (ch != ' ')
             {
                 while (Between('0', ch, '9') || Between('A', ch, 'Z')
-                    || Between('a', ch,'z') || ch == '-' || ch == '_')
+                    || Between('a', ch, 'z') || ch == '-' || ch == '_')
                     ch = this.Peek(++length);
                 if (ch != '!')
                 {

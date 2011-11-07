@@ -1,6 +1,12 @@
 ﻿namespace Nyaml.Tags
 {
-    public abstract class Scalar<T> : Base<T>
+    public interface IScalar
+    {
+        System.Func<string, string> CanonicalFormatter { get; }
+    }
+
+    public abstract class Scalar<TConstruct, TRepresent> 
+        : Base<TConstruct, TRepresent>, IScalar
     {
         public abstract System.Func<string, string> CanonicalFormatter { get; }
 
@@ -13,7 +19,7 @@
 
         internal override Nodes.Base Compose()
         {
-            return new Nodes.Scalar<T> { ScalarTag = this };
+            return new Nodes.Scalar { ScalarTag = this };
         }
     }
 }

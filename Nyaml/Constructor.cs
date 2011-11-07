@@ -63,7 +63,7 @@
             var mapping = node as Nodes.Mapping;
             if (mapping != null)
                 this.FlattenMapping(mapping);
-            data = node.Construct(this);
+            data = node.Tag.ConstructObject(node, this);
 
             this.constructedObjects[node] = data;
             this.recursiveObjects.Remove(node);

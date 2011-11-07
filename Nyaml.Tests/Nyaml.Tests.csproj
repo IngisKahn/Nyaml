@@ -45,6 +45,7 @@
     <Compile Include="ReaderTests.cs" />
     <Compile Include="TestFileProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TokenTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\a-nasty-libyaml-bug.loader-error">
@@ -599,7 +600,7 @@
     <None Include="Data\invalid-utf8-byte.loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\invalid-utf8-byte.stream-error">
+    <None Include="Data\invalid-utf8-byte.stream-errorUNUSED">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\invalid-yaml-directive-version-1.loader-error">
@@ -686,7 +687,7 @@
     <None Include="Data\null.detect">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\odd-utf16.stream-error">
+    <None Include="Data\odd-utf16.stream-errorUNUSED">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\recursive-anchor.former-loader-error">

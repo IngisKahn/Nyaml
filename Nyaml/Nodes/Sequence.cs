@@ -46,10 +46,5 @@ namespace Nyaml.Nodes
         {
             serializer.SerializeSequence(this, serializer.Schema.CanResolve(this, true));
         }
-
-        internal override object Construct(Constructor constructor)
-        {
-            return this.SequenceTag.ConstructObject(this, constructor);
-        }
     }
 }

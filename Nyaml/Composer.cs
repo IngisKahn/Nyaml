@@ -137,14 +137,15 @@
             var node = new Nodes.Sequence
                        {
                            StartMark = startEvent.StartMark,
-                           FlowStyle = startEvent.FlowStyle
+                           FlowStyle = startEvent.FlowStyle,
+                           SequenceTag = this.schema.GetTag(startEvent.Tag)
                        };
             if (anchor != null)
                 this.anchors[anchor] = node;
             var index = 0;
             while (!this.CheckEvent<Events.SequenceEnd>())
             {
-                int index1 = index;
+                var index1 = index;
                 node.Content.Add(this.ComposeNode(() => this.schema.DescendResolver(node, index1)));
                 index++;
             }
@@ -161,7 +162,8 @@
             var node = new Nodes.Mapping
                        {
                 StartMark = startEvent.StartMark,
-                FlowStyle = startEvent.FlowStyle
+                FlowStyle = startEvent.FlowStyle,
+                MappingTag = this.schema.GetTag(startEvent.Tag)
             };
             if (anchor != null)
                 this.anchors[anchor] = node;

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class OrderedMap : Sequence<IEnumerable<IDictionary>>
+    public sealed class OrderedMap : Sequence<List<IDictionary>, IDictionary>
     {
         internal OrderedMap() : base("tag:yaml.org,2002:omap")
         { }
@@ -27,29 +27,26 @@
             return true;
         }
 
-        protected override IEnumerable<IDictionary> Construct(Nodes.Base node, Constructor constructor)
+        protected override List<IDictionary> Construct(Nodes.Base node, Constructor constructor)
         {
             var content = ((Nodes.Sequence)node).Content;
-            var om = new OrderedMap<object, object>();
-            foreach (var e in content.OfType<Nodes.Mapping>().Select(m => m.Content.First()))
-            {
-                om.Add(constructor.ConstructObject(e.Key), constructor.ConstructObject(e.Value));
-            }
+            var om = new List<IDictionary>(content.Count);
+            om.AddRange(content.OfType<Nodes.Mapping>()
+                .Select(m => m.Content.First())
+                .Select(e => new Hashtable { { constructor.ConstructObject(e.Key), constructor.ConstructObject(e.Value) } }));
             return om;
         }
 
-        public override Nodes.Base Represent(IEnumerable<IDictionary> value)
+        public override Nodes.Base Represent(IDictionary value, Representer representer)
         {
             var content = new List<Nodes.Base>();
             var result = new Nodes.Sequence { SequenceTag = this };
             foreach (var n in content)
                 result.Content.Add(n);
-            foreach (var om in value)
+            foreach (var key in value.Keys)
             {
-                var e = om.GetEnumerator();
-                e.MoveNext();
                 var m = new Nodes.Mapping { MappingTag = new Mapping() };
-                m.Content.Add((Nodes.Base)e.Key, (Nodes.Base)e.Value);
+                //m.Content.Add((Nodes.Base)e.Key, (Nodes.Base)e.Value);
                 content.Add(m);
             }
             return result;

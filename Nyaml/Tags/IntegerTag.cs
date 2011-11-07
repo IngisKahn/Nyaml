@@ -5,7 +5,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public class Integer : Scalar<BigInteger>
+    public class Integer : Scalar<BigInteger, BigInteger>
     {
         internal Integer()
         {
@@ -132,9 +132,9 @@
             return BigInteger.Parse(this.CanonicalFormatter(((Nodes.Scalar)node).Content));
         }
 
-        public override Nodes.Base Represent(BigInteger value)
+        public override Nodes.Base Represent(BigInteger value, Representer representer)
         {
-            return new Nodes.Scalar<BigInteger> { ScalarTag = this, Content = value.ToString() };
+            return new Nodes.Scalar { ScalarTag = this, Content = value.ToString() };
         }
     }
 }

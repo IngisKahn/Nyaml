@@ -2,7 +2,7 @@
 {
     using System.Text.RegularExpressions;
 
-    public class Null : Scalar<object>
+    public class Null : Scalar<object, object>
     {
         internal Null()
         {
@@ -26,9 +26,9 @@
             return null;
         }
 
-        public override Nodes.Base Represent(object value)
+        public override Nodes.Base Represent(object value, Representer representer)
         {
-            return new Nodes.Scalar<object> { ScalarTag = this, Content = "~" };
+            return new Nodes.Scalar { ScalarTag = this, Content = "~" };
         }
     }
 }

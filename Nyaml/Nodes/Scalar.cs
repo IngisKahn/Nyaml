@@ -1,6 +1,6 @@
 namespace Nyaml.Nodes
 {
-    public abstract class Scalar : Base
+    public class Scalar : Base
     {
         // public string Value { get; set; }
         public Style Style { get; set; }
@@ -26,11 +26,11 @@ namespace Nyaml.Nodes
                                           : ScalarImplicitLevel.None;
             serializer.SerializeScalar(this, implicitLevel);
         }
-    }
+    //}
 
-    public sealed class Scalar<T> : Scalar
-    {
-        public Tags.Scalar<T> ScalarTag { get; set; }
+    //public sealed class Scalar<T> : Scalar
+    //{
+        public Tags.Base ScalarTag { get; set; }
 
         public override Tags.Base Tag
         {
@@ -39,7 +39,7 @@ namespace Nyaml.Nodes
 
         public override bool Equals(object obj)
         {
-            var cannon = this.ScalarTag.CanonicalFormatter;
+            var cannon = ((Tags.IScalar)this.ScalarTag).CanonicalFormatter;
             var other = obj as Scalar;
             return other != null
                 && base.Equals(obj)
@@ -48,12 +48,7 @@ namespace Nyaml.Nodes
 
         public override int GetHashCode()
         {
-            return base.GetHashCode() ^ this.ScalarTag.CanonicalFormatter(this.Content).GetHashCode();
-        }
-
-        internal override object Construct(Constructor constructor)
-        {
-            return this.ScalarTag.AsValue(this, constructor);
+            return base.GetHashCode() ^ ((Tags.IScalar)this.ScalarTag).CanonicalFormatter(this.Content).GetHashCode();
         }
     }
 }

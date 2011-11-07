@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Tags
 {
-    public class Value : Scalar<string>
+    public class Value : Scalar<string, string>
     {
         internal Value()
         {
@@ -22,9 +22,9 @@
             return ((Nodes.Scalar)node).Content;
         }
 
-        public override Nodes.Base Represent(string value)
+        public override Nodes.Base Represent(string value, Representer representer)
         {
-            return new Nodes.Scalar<string> { ScalarTag = this, Content = "="};
+            return new Nodes.Scalar { ScalarTag = this, Content = "="};
         }
     }
 }

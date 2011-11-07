@@ -52,10 +52,5 @@ namespace Nyaml.Nodes
         {
             serializer.SerializeMapping(this, serializer.Schema.CanResolve(this, true));
         }
-
-        internal override object Construct(Constructor constructor)
-        {
-            return this.MappingTag.ConstructObject(this, constructor);
-        }
     }
 }

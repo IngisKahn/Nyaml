@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Pairs : Sequence<List<Tuple<object, object>>>
+    public sealed class Pairs : Sequence<List<Tuple<object, object>>, IEnumerable<Tuple<object, object>>>
     {
         internal Pairs() : base("tag:yaml.org,2002:pairs")
         { }
@@ -27,7 +27,7 @@
                 .ToList();
         }
 
-        public override Nodes.Base Represent(List<Tuple<object, object>> value)
+        public override Nodes.Base Represent(IEnumerable<Tuple<object, object>> value, Representer representer)
         {
             var result = new Nodes.Sequence { SequenceTag = this };
             var list = result.Content;   

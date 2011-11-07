@@ -1,9 +1,11 @@
 ﻿namespace Nyaml.Tags
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public class Binary : Scalar<byte[]>
+    public class Binary : Scalar<byte[], IEnumerable<byte>>
     {
         internal Binary()
         {
@@ -20,9 +22,8 @@
                 return v => 
                     {
                         var sb = new StringBuilder(v.Length);
-                        foreach (var c in v)
-                            if (!separatorExpression.IsMatch(c.ToString()))
-                                sb.Append(c);
+                        foreach (var c in v.Where(c => !separatorExpression.IsMatch(c.ToString())))
+                            sb.Append(c);
                         return sb.ToString();
                     };
             }
@@ -38,9 +39,9 @@
             return System.Convert.FromBase64String(this.CanonicalFormatter(((Nodes.Scalar)node).Content));
         }
 
-        public override Nodes.Base Represent(byte[] value)
+        public override Nodes.Base Represent(IEnumerable<byte> value, Representer representer)
         {
-            return new Nodes.Scalar<byte[]> { ScalarTag = this, Content = System.Convert.ToBase64String(value) };
+            return new Nodes.Scalar { ScalarTag = this, Content = System.Convert.ToBase64String(value.ToArray()) };
         }
     }
 }

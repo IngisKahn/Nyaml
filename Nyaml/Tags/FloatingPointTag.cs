@@ -3,7 +3,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public class FloatingPoint : Scalar<double>
+    public class FloatingPoint : Scalar<double, double>
     {
         internal FloatingPoint()
         {
@@ -32,15 +32,19 @@
                         var isBase60 = false;
                         
                         int pos;
-                        if (u[0] == '-')
+                        switch (u[0])
                         {
-                            isNegative = true;
-                            pos = 1;
+                            case '-':
+                                isNegative = true;
+                                pos = 1;
+                                break;
+                            case '+':
+                                pos = 1;
+                                break;
+                            default:
+                                pos = 0;
+                                break;
                         }
-                        else if (u[0] == '+')
-                            pos = 1;
-                        else
-                            pos = 0;
 
                         var hasHitDot = false;
                         for (; pos < u.Length; pos++)
@@ -134,7 +138,7 @@
             }
         }
 
-        public override Nodes.Base Represent(double value)
+        public override Nodes.Base Represent(double value, Representer representer)
         {
             string content;
             if (double.IsNaN(value))
@@ -145,7 +149,7 @@
                 content = "-.inf";
             else
                 content = this.CanonicalFormatter(value.ToString());
-            return new Nodes.Scalar<double> { ScalarTag = this, Content = content };
+            return new Nodes.Scalar { ScalarTag = this, Content = content };
         }
     }
 }

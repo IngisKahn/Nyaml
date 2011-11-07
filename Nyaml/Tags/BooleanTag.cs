@@ -2,7 +2,7 @@
 {
     using System.Text.RegularExpressions;
 
-    public sealed class Boolean : Scalar<bool>
+    public sealed class Boolean : Scalar<bool, bool>
     {
         internal Boolean()
         {
@@ -27,9 +27,9 @@
             return this.CanonicalFormatter(((Nodes.Scalar)node).Content) == "y";
         }
 
-        public override Nodes.Base Represent(bool value)
+        public override Nodes.Base Represent(bool value, Representer representer)
         {
-            return new Nodes.Scalar<bool> { ScalarTag = this, Content = value ? "y" : "n" };
+            return new Nodes.Scalar { ScalarTag = this, Content = value ? "y" : "n" };
         }
     }
 }
