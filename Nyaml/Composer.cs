@@ -3,7 +3,16 @@
     using System;
     using System.Collections.Generic;
 
-    public class Composer
+    public interface IComposer
+    {
+        bool CheckNode();
+
+        Nodes.Base GetNode();
+
+        Nodes.Base GetSingleNode();
+    }
+
+    public class Composer : IComposer
     {
         [Serializable]
         public class Error : MarkedYamlError
@@ -17,10 +26,10 @@
         private readonly Dictionary<string, Nodes.Base> anchors =
             new Dictionary<string, Nodes.Base>();
 
-        private readonly Parser parser;
+        private readonly IParser parser;
         private readonly Schemas.Base schema;
 
-        public Composer(Parser parser, Schemas.Base schema = null)
+        public Composer(IParser parser, Schemas.Base schema = null)
         {
             this.parser = parser;
             this.schema = schema ?? new Schemas.Full();

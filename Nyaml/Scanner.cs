@@ -66,9 +66,9 @@
         private bool allowSimpleKey = true;
         private readonly Dictionary<int, SimpleKey> possibleSimpleKeys = new Dictionary<int, SimpleKey>();
 
-        private readonly Reader reader;
+        private readonly IReader reader;
 
-        public Scanner(Reader reader)
+        public Scanner(IReader reader)
         {
             this.reader = reader;
             this.FetchStreamStart();

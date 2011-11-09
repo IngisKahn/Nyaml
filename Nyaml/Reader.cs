@@ -6,7 +6,26 @@
     using System.Text;
     using System.Text.RegularExpressions;
     
-    public class Reader : IDisposable
+    public interface IReader : IDisposable
+    {
+        char Peek(int index = 0);
+
+        string Prefix(int length = 1);
+
+        void Forward(int length = 1);
+
+        Mark Mark { get; }
+
+        int Index { get; }
+
+        int Line { get; }
+
+        int Column { get; }
+
+        Encoding Encoding { get; }
+    }
+
+    public class Reader : IReader
     {
         [Serializable]
         public class Error : YamlError

@@ -62,6 +62,7 @@
     <Compile Include="Events\StreamStart.cs" />
     <Compile Include="FlowStyle.cs" />
     <Compile Include="Kind.cs" />
+    <Compile Include="Loader.cs" />
     <Compile Include="Mark.cs" />
     <Compile Include="MarkedYamlError.cs" />
     <Compile Include="Nodes\Collection.cs" />

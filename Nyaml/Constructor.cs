@@ -3,7 +3,16 @@
     using System;
     using System.Collections.Generic;
 
-    public class Constructor
+    public interface IConstructor
+    {
+        bool CheckData();
+
+        object GetData();
+
+        object GetSingleData();
+    }
+
+    public class Constructor : IConstructor
     {
         [Serializable]
         public class Error : MarkedYamlError
@@ -17,9 +26,9 @@
         private readonly Dictionary<Nodes.Base, object> constructedObjects = new Dictionary<Nodes.Base, object>();
         private readonly HashSet<Nodes.Base> recursiveObjects = new HashSet<Nodes.Base>();
 
-        private readonly Composer composer;
+        private readonly IComposer composer;
 
-        public Constructor(Composer composer)
+        public Constructor(IComposer composer)
         {
             this.composer = composer;
         }
