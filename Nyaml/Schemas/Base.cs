@@ -27,17 +27,17 @@
 
         public void AddTag<TConstruct, TRepresent>(Tags.Base<TConstruct, TRepresent> tag, bool addType = true)
         {
-            this.tags.Add(tag.Name, tag);
+            this.tags[tag.Name] = tag;
             if (addType)
-                this.tagsByType.Add(typeof(TRepresent), tag);
+                this.tagsByType[typeof(TRepresent)] = tag;
         }
 
         public void AddTagType<T>(Tags.Base tag)
         {
-            this.tagsByType.Add(typeof(T), tag);
+            this.tagsByType[typeof(T)] = tag;
         }
 
-        public bool CanResolve(Nodes.Base node, bool isImplicit)
+        internal bool CanResolve(Nodes.Base node, bool isImplicit)
         {
             return node.Tag.Equals(this.ResolveTag(node, new Tags.Nonspecific(isImplicit)));
         }

@@ -10,7 +10,7 @@
             this.Name = "tag:yaml.org,2002:float";
         }
 
-        static readonly Regex floatExpression = new Regex(@"^(([-+]?((([0-9][0-9_]*)?\.[0-9.]*([eE][-+][0-9]+)?)|([0-9][0-9_]*(:[0-5]?[0-9])+\.[0-9_]*))|\.([iI]nf|INF)))|\.([nN]an|NAN))$", RegexOptions.Compiled);
+        static readonly Regex floatExpression = new Regex(@"^(([-+]?((([0-9][0-9_]*)?\.[0-9.]*([eE][-+][0-9]+)?)|([0-9][0-9_]*(:[0-5]?[0-9])+\.[0-9_]*))|\.([iI]nf|INF)))|\.([nN]an|NAN)$", RegexOptions.Compiled);
 
         public override System.Func<string, string> CanonicalFormatter
         {

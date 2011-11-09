@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using NUnit.Framework;
 
     [TestFixture]
@@ -30,6 +31,21 @@
                 { typeof(Tokens.Key), "?" },
                 { typeof(Tokens.Value), ":" },
             };
+
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestDataAndTokens")]
+        public void TestTokens(string dataFile, string tokensFile)
+        {
+            var tokens2 = new StreamReader(tokensFile).ReadToEnd().Split(new[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var tokens1 = (from token in Yaml.Scan(new FileStream(dataFile, FileMode.Open)) 
+                           where !(token is Tokens.StreamStart || token is Tokens.StreamEnd) 
+                           select replaces[token.GetType()]).ToList();
+
+            Assert.AreEqual(tokens1.Count, tokens2.Count());
+            Assert.IsTrue(tokens1.Zip(tokens2, (t1, t2) => t1 != t2).Any());
+        }
+
         [Test]
         [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonical")]
         public void TestScanner(string dataFile, string canonFile)

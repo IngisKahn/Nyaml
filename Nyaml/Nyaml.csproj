@@ -123,6 +123,7 @@
     <Compile Include="Tokens\Tag.cs" />
     <Compile Include="Tokens\Base.cs" />
     <Compile Include="Tokens\Value.cs" />
+    <Compile Include="Yaml.cs" />
     <Compile Include="YamlError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
