@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="MarkTest.cs" />
     <Compile Include="ReaderTests.cs" />
+    <Compile Include="StructureParser.cs" />
+    <Compile Include="StructureTests.cs" />
     <Compile Include="TestFileProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenTests.cs" />

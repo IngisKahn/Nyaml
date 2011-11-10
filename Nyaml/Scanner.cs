@@ -154,10 +154,12 @@
                 this.FetchMoreTokens();
             if (tokens.Count == 0)
                 return null;
-            this.tokensTaken++;
             var result = this.tokens[0] as T;
             if (result != null)
+            {
+                this.tokensTaken++;
                 this.tokens.RemoveAt(0);
+            }
             return result;
         }
 

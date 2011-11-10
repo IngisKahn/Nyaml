@@ -81,5 +81,10 @@
         {
             get { return GetFilesPerTest(new[] { ".data", ".tokens" }); }
         }
+
+        public static IEnumerable<object[]> TestDataAndStructure
+        {
+            get { return GetFilesPerTest(new[] { ".data", ".structure" }); }
+        }
     }
 }
