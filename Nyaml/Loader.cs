@@ -1,6 +1,9 @@
 ﻿namespace Nyaml
 {
-    public sealed class Loader : IReader, IScanner, IParser, IComposer, IConstructor
+    public interface ILoader : IReader, IScanner, IParser, IComposer, IConstructor
+    { }
+
+    public class Loader : ILoader
     {
         private readonly IReader reader;
         private readonly IScanner scanner;
@@ -21,22 +24,16 @@
             this.constructor = constructor ?? new Constructor(this.composer);
         }
 
-        public Loader(string data, IScanner scanner = null, IParser parser = null,
-            IComposer composer = null, IConstructor constructor = null,
-            Schemas.Base schema = null)
-            : this(new Reader(data), scanner, parser, composer, constructor, schema)
+        public Loader(string data, Schemas.Base schema = null)
+            : this(new Reader(data), schema: schema)
         { }
 
-        public Loader(byte[] data, IScanner scanner = null, IParser parser = null,
-            IComposer composer = null, IConstructor constructor = null,
-            Schemas.Base schema = null)
-            : this(new Reader(data), scanner, parser, composer, constructor, schema)
+        public Loader(byte[] data, Schemas.Base schema = null)
+            : this(new Reader(data), schema: schema)
         { }
 
-        public Loader(System.IO.Stream stream, IScanner scanner = null, IParser parser = null,
-            IComposer composer = null, IConstructor constructor = null,
-            Schemas.Base schema = null)
-            : this(new Reader(stream), scanner, parser, composer, constructor, schema)
+        public Loader(System.IO.Stream stream, Schemas.Base schema = null)
+            : this(new Reader(stream), schema: schema)
         { }
 
         public char Peek(int index = 0)
@@ -81,7 +78,8 @@
 
         public void Dispose()
         {
-            this.reader.Dispose();
+            if (this.reader != null)
+                this.reader.Dispose();
         }
 
         public bool CheckToken()

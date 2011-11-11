@@ -917,7 +917,13 @@
                     length++;
                     ch = this.Peek(length);
                 }
-                handle = useHandle ? this.ScanTagHandle("tag", start) : "!";
+                if (useHandle)
+                    handle = this.ScanTagHandle("tag", start);
+                else
+                {
+                    handle = "!";
+                    this.Forward();
+                }
                 suffix = this.ScanTagUri("tag", start);
             }
             ch = this.Peek();
@@ -1185,7 +1191,11 @@
                                 throw new Error("while scanning a double-quoted scalar", start,
                                             string.Format("expected an escape sequence of {0} hex numbers, but found {1}", length, this.Peek(k)),
                                             this.Mark);
-                        chunks.Add(int.Parse(this.Prefix(length), NumberStyles.AllowHexSpecifier).ToString());
+                        var code = int.Parse(this.Prefix(length), NumberStyles.AllowHexSpecifier);
+                        chunks.Add(code < char.MaxValue
+                                       ? ((char) code).ToString()
+                                       : Encoding.UTF32.GetString(BitConverter.GetBytes(code)));
+                        // chunks.Add(int.Parse(this.Prefix(length), NumberStyles.AllowHexSpecifier).ToString());
                         this.Forward(length);
                     }
                     else if ("\r\n\x85\u2028\u2029".IndexOf(ch) != -1)
@@ -1225,7 +1235,10 @@
                 case '\u2029':
                     var lineBreak = this.ScanLineBreak();
                     var breaks = this.ScanFlowScalarBreaks(start);
-                    chunks.Add(lineBreak != "\n" ? lineBreak : " ");
+                    if (lineBreak != "\n")
+                        chunks.Add(lineBreak);
+                    else if (breaks.Count == 0)
+                        chunks.Add(" ");
                     chunks.AddRange(breaks);
                     break;
                 default:
@@ -1235,7 +1248,7 @@
             return chunks;
         }
 
-        private IEnumerable<string> ScanFlowScalarBreaks(Mark start)
+        private IList<string> ScanFlowScalarBreaks(Mark start)
         {
             var chunks = new List<string>();
             for (; ; )

@@ -165,7 +165,7 @@
         {
             if (!this.CheckToken<Tokens.Directive, Tokens.DocumentStart, Tokens.StreamEnd>())
             {
-                this.tagHandles = defaultTags;
+                this.tagHandles = new Dictionary<string, string>(defaultTags);
                 var token = this.PeekToken();
                 var start = token.StartMark;
                 var end = start;

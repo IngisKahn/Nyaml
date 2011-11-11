@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Canonical\Error.cs" />
+    <Compile Include="Canonical\Loader.cs" />
+    <Compile Include="Canonical\Parser.cs" />
+    <Compile Include="Canonical\Scanner.cs" />
     <Compile Include="Composer.cs" />
     <Compile Include="Constructor.cs" />
     <Compile Include="Emitter.cs" />
