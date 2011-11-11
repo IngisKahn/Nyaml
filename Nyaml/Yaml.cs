@@ -52,5 +52,52 @@
             while (loader.CheckEvent())
                 yield return loader.GetEvent();
         }
+
+        public static Nodes.Base Compose(string data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return Compose(loader);
+        }
+
+        public static Nodes.Base Compose(byte[] data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return Compose(loader);
+        }
+
+        public static Nodes.Base Compose(Stream stream)
+        {
+            using (var loader = new Loader(new Reader(stream)))
+                return Compose(loader);
+        }
+
+        public static Nodes.Base Compose(ILoader loader)
+        {
+            return loader.GetSingleNode();
+        }
+
+        public static IEnumerable<Nodes.Base> ComposeAll(string data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return ComposeAll(loader);
+        }
+
+        public static IEnumerable<Nodes.Base> ComposeAll(byte[] data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return ComposeAll(loader);
+        }
+
+        public static IEnumerable<Nodes.Base> ComposeAll(Stream stream)
+        {
+            using (var loader = new Loader(new Reader(stream)))
+                return ComposeAll(loader);
+        }
+
+        public static IEnumerable<Nodes.Base> ComposeAll(ILoader loader)
+        {
+            while (loader.CheckNode())
+                yield return loader.GetNode();
+        }
     }
 }

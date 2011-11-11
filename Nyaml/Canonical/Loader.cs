@@ -20,7 +20,7 @@
             }
 
             private Loader(IScanner scanner)
-                : base(null, scanner, new Parser(scanner), schema: new Failsafe())
+                : base(null, scanner, new Parser(scanner), schema: new Json())
             {
             }
         }
@@ -50,6 +50,30 @@
         {
             using (var loader = new Canonical.Loader(stream))
                 return Parse(loader);
+        }
+
+        public static Nodes.Base CanonicalCompose(string data)
+        {
+            using (var loader = new Canonical.Loader(data))
+                return Compose(loader);
+        }
+
+        public static Nodes.Base CanonicalCompose(Stream stream)
+        {
+            using (var loader = new Canonical.Loader(stream))
+                return Compose(loader);
+        }
+
+        public static IEnumerable<Nodes.Base> CanonicalComposeAll(string data)
+        {
+            using (var loader = new Canonical.Loader(data))
+                return ComposeAll(loader);
+        }
+
+        public static IEnumerable<Nodes.Base> CanonicalComposeAll(Stream stream)
+        {
+            using (var loader = new Canonical.Loader(stream))
+                return ComposeAll(loader);
         }
     }
 }

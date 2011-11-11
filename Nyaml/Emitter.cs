@@ -640,11 +640,11 @@
             var tag = scalarEvent != null ? scalarEvent.Tag : collectionEvent.Tag;
             if (scalarEvent != null)
             {
-                if (scalarEvent.Style == Style.None)
+                if (scalarEvent.Style == Style.Plain)
                     this.style = this.ChooseScalarStyle();
                 if ((!this.isCanonical || tag == null)
-                    && ((this.style == Style.None && scalarEvent.ImplicitLevel == ScalarImplicitLevel.Plain)
-                    || (this.style != Style.None && scalarEvent.ImplicitLevel == ScalarImplicitLevel.NonPlain)))
+                    && ((this.style == Style.Plain && scalarEvent.ImplicitLevel == ScalarImplicitLevel.Plain)
+                    || (this.style != Style.Plain && scalarEvent.ImplicitLevel == ScalarImplicitLevel.NonPlain)))
                 {
                     this.preparedTag = null;
                     return;
@@ -676,19 +676,19 @@
                 this.analysis = this.AnalyzeScalar(eventNode.Value);
             if (eventNode.Style == Style.Double || this.isCanonical)
                 return Style.Double;
-            if (eventNode.Style == Style.None && eventNode.ImplicitLevel == ScalarImplicitLevel.Plain)
+            if (eventNode.Style == Style.Plain && eventNode.ImplicitLevel == ScalarImplicitLevel.Plain)
             {
                 if (!(this.isSimpleKeyContext &&
                     (this.analysis.IsEmpty || this.analysis.IsMultiline))
                     && (this.flowLevel != 0 && this.analysis.AllowFlowPlain
                     || (this.flowLevel == 0 && this.analysis.AllowBlockPlain)))
-                    return Style.None;
+                    return Style.Plain;
             }
             if (eventNode.Style == Style.Folded || eventNode.Style == Style.Literal)
                 if (this.flowLevel == 0 && !this.isSimpleKeyContext
                     && this.analysis.AllowBlock)
                     return eventNode.Style;
-            if (eventNode.Style == Style.None || eventNode.Style == Style.Single)
+            if (eventNode.Style == Style.Plain || eventNode.Style == Style.Single)
                 if (this.analysis.AllowSingleQuoted && !
                     (this.isSimpleKeyContext
                     && this.analysis.IsMultiline))
@@ -700,7 +700,7 @@
         {
             if (this.analysis == null)
                 this.analysis = this.AnalyzeScalar(((Events.Scalar) this.currentEvent).Value);
-            if (this.style == Style.None)
+            if (this.style == Style.Plain)
                 this.style = this.ChooseScalarStyle();
             var split = !this.isSimpleKeyContext;
             switch (this.style)
@@ -722,7 +722,7 @@
                     break;
             }
             this.analysis = null;
-            this.style = Style.None;
+            this.style = Style.Plain;
         }
 
         private static string PrepareVersion(Tuple<string, string> version)

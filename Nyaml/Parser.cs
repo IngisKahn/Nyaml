@@ -359,6 +359,7 @@
                     else
                         fullTag = suffix;
                 }
+
                 if (start == null)
                     start = end = this.PeekToken().StartMark;
                 var isImplicit = fullTag == null || fullTag == "!";

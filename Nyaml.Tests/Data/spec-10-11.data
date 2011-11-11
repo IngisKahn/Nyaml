@@ -1,4 +1,4 @@
-[
+! [
 ? explicit key1 : explicit value,
 ? explicit key2 : , # Explicit empty
 ? explicit key3,     # Implicit empty

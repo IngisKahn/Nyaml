@@ -998,7 +998,7 @@
             if (chomping.HasValue && chomping.Value)
                 chunks.AddRange(breaks);
 
-            return new Tokens.Scalar { Value = string.Join("", chunks) };
+            return new Tokens.Scalar { Value = string.Join("", chunks), Style = style };
         }
 
         private void ScanBlockScalarIndicators(Mark start, out bool? chomping, out int? increment)
@@ -1116,7 +1116,7 @@
             }
             this.Forward();
             var end = this.Mark;
-            return new Tokens.Scalar { Value = string.Join("", chunks), IsPlain = false, StartMark = start, EndMark = end };
+            return new Tokens.Scalar { Value = string.Join("", chunks), IsPlain = false, StartMark = start, EndMark = end, Style = style };
         }
 
         private static readonly Dictionary<char, char> escapeReplacements =

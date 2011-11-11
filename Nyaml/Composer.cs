@@ -147,7 +147,7 @@
                        {
                            StartMark = startEvent.StartMark,
                            FlowStyle = startEvent.FlowStyle,
-                           SequenceTag = this.schema.GetTag(startEvent.Tag)
+                           SequenceTag = this.schema.GetTag(startEvent.Tag) ?? new Tags.Nonspecific(false)
                        };
             if (anchor != null)
                 this.anchors[anchor] = node;
@@ -172,7 +172,7 @@
                        {
                 StartMark = startEvent.StartMark,
                 FlowStyle = startEvent.FlowStyle,
-                MappingTag = this.schema.GetTag(startEvent.Tag)
+                MappingTag = this.schema.GetTag(startEvent.Tag) ?? new Tags.Nonspecific(false)
             };
             if (anchor != null)
                 this.anchors[anchor] = node;

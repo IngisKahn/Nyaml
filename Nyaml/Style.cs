@@ -2,7 +2,7 @@ namespace Nyaml
 {
     public enum Style
     {
-        None,
+        Plain,
         Literal,
         Folded,
         Single,

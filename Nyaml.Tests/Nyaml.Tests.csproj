@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CanonicalTests.cs" />
     <Compile Include="MarkTest.cs" />
     <Compile Include="ReaderTests.cs" />
     <Compile Include="StructureParser.cs" />

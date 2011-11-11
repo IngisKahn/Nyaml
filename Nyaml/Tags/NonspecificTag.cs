@@ -2,9 +2,9 @@
 {
     internal sealed class Nonspecific : Base<object, object>
     {
-        internal Nonspecific(bool isSimpleType)
+        internal Nonspecific(bool isNonPlainScalar)
         {
-            this.Name = isSimpleType ? "!" : "?";
+            this.Name = isNonPlainScalar ? "!" : "?";
         }
 
         internal override bool Validate(Nodes.Base node)

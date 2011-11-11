@@ -38,7 +38,7 @@
         {
             var tokens2 = new StreamReader(tokensFile).ReadToEnd().Split(new[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var tokens1 = (from token in Yaml.Scan(new FileStream(dataFile, FileMode.Open)) 
+            var tokens1 = (from token in Yaml.Scan(new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.Read)) 
                            where !(token is Tokens.StreamStart || token is Tokens.StreamEnd) 
                            select replaces[token.GetType()]).ToList();
 
@@ -50,11 +50,11 @@
         [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonical")]
         public void TestScanner(string dataFile, string canonFile)
         {
-            var s = new Scanner(new Reader(new FileStream(dataFile, FileMode.Open)));
+            var s = new Scanner(new Reader(new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.Read)));
             var tokens1 = new List<Tokens.Base>();
             while(s.CheckToken()) 
                 tokens1.Add(s.GetToken());
-            s = new Scanner(new Reader(new FileStream(canonFile, FileMode.Open)));
+            s = new Scanner(new Reader(new FileStream(canonFile, FileMode.Open, FileAccess.Read, FileShare.Read)));
             var tokens2 = new List<Tokens.Base>();
             while (s.CheckToken()) 
                 tokens2.Add(s.GetToken());

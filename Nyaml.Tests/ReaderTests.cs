@@ -22,7 +22,7 @@
         [TestCaseSource(typeof(TestFileProvider), "TestStreamError")]
         public void TestStreamError(string fileName)
         {
-            using (var stream = new FileStream(fileName, FileMode.Open))
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 RunReader(stream);
                 stream.Seek(0, SeekOrigin.Begin);

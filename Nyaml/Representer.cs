@@ -22,7 +22,7 @@
 
         private object aliasKey;
 
-        public Representer(Serializer serializer, Style defaultStyle = Style.None,
+        public Representer(Serializer serializer, Style defaultStyle = Style.Plain,
             FlowStyle defaultFlowStyle = FlowStyle.None, Schemas.Base schema = null)
         {
             this.serializer = serializer;

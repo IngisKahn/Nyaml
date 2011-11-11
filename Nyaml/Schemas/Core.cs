@@ -11,7 +11,7 @@
         static readonly Regex intExpression = 
             new Regex("^([-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)$", RegexOptions.Compiled);
         static readonly Regex floatExpression = 
-            new Regex("^([-+]?((\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?|\\.([iI]nf|INF)))|\\.([nN]an|NAN)$", RegexOptions.Compiled);
+            new Regex("^(([-+]?((\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?|\\.([iI]nf|INF)))|\\.([nN]an|NAN))$", RegexOptions.Compiled);
 
         protected override Tags.Base ResolveSpecific(Nodes.Base node)
         {

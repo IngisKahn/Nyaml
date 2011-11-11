@@ -77,6 +77,16 @@
             get { return GetFilesPerTest(new[] { ".data", ".canonical" }); }
         }
 
+        public static IEnumerable<object[]> TestDataAndCanonicalNotEmpty
+        {
+            get { return GetFilesPerTest(new[] { ".data", ".canonical" }, new[] { ".empty" }); }
+        }
+
+        public static IEnumerable<object[]> TestCanonical
+        {
+            get { return GetFilesPerTest(new[] { ".canonical" }); }
+        }
+
         public static IEnumerable<object[]> TestDataAndTokens
         {
             get { return GetFilesPerTest(new[] { ".data", ".tokens" }); }

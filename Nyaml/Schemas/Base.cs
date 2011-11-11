@@ -14,7 +14,10 @@
         public Tags.Base GetTag(string name)
         {
             Tags.Base result;
-            this.tags.TryGetValue(name, out result);
+            if (name != null)
+                this.tags.TryGetValue(name, out result);
+            else
+                result = null;
             return result;
         }
 
@@ -87,7 +90,7 @@
 
             public SimpleScalar(Tags.Base tag, string content, Style style)
             {
-                this.tag = tag ?? new Tags.Nonspecific(style == Style.Literal);
+                this.tag = tag ?? new Tags.Nonspecific(style != Style.Plain);
                 this.Content = content;
                 this.Style = Style.Folded;
             }
@@ -95,7 +98,7 @@
 
         public Nodes.Scalar CreateScalarNode(string tagName, string value, Style style)
         {
-            var tag = this.Resolve(new SimpleScalar(this.GetTag(tagName), value, style));
+            var tag = this.Resolve(new SimpleScalar(this.GetTag(tagName), value, style)) ?? new Tags.String();
             var node = (Nodes.Scalar)tag.Compose();
             node.Content = value;
             return node;

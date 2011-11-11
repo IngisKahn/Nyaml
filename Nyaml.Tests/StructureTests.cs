@@ -57,7 +57,7 @@
         {
             var subNodes1 = new List<object>();
             var nodes2 = StructureParser.Parse(new StreamReader(structureFile).ReadToEnd());
-            var loader = new Loader(new FileStream(dataFile, FileMode.Open));
+            var loader = new Loader(new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.Read));
             while (loader.CheckEvent())
             {
                 if (loader.CheckEvent<Events.StreamStart, Events.StreamEnd,
@@ -115,9 +115,63 @@
         [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonical")]
         public void TestParser(string dataFile, string canonicalFile)
         {
-            var events1 = Yaml.Parse(new FileStream(dataFile, FileMode.Open)).ToList();
+            var events1 = Yaml.Parse(new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.Read)).ToList();
             var events2 = Yaml.CanonicalParse(new FileStream(canonicalFile, FileMode.Open)).ToList();
             this.CompareEvents(events1, events2);
+        }
+
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestCanonical")]
+        public void TestParserOnCanonical(string canonicalFile)
+        {
+            var events1 = Yaml.Parse(new FileStream(canonicalFile, FileMode.Open, FileAccess.Read, FileShare.Read)).ToList();
+            var events2 = Yaml.CanonicalParse(new FileStream(canonicalFile, FileMode.Open)).ToList();
+            this.CompareEvents(events1, events2);
+        }
+
+        private void CompareNodes(Nodes.Base node1, Nodes.Base node2)
+        {
+            Assert.That(node1, Is.TypeOf(node2.GetType()));
+            Assert.That(node1.Tag, Is.EqualTo(node2.Tag));
+            var sca = node1 as Nodes.Scalar;
+            if (sca != null)
+            {
+                Assert.That(sca.Content, Is.EqualTo(((Nodes.Scalar) node2).Content));
+                return;
+            }
+            var seq = node1 as Nodes.Sequence;
+            if (seq != null)
+            {
+                foreach (var p in seq.Content.Zip(((Nodes.Sequence)node2).Content, Tuple.Create))
+                    this.CompareNodes(p.Item1, p.Item2);
+                return;
+            }
+            var map = node1 as Nodes.Mapping;
+            if (map == null) 
+                return;
+            foreach (var p in map.Content.Zip(((Nodes.Mapping)node2).Content, Tuple.Create))
+            {
+                this.CompareNodes(p.Item1.Key, p.Item2.Key);
+                this.CompareNodes(p.Item1.Value, p.Item2.Value);
+            }
+        }
+
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonical")]
+        public void TestComposer(string dataFile, string canonicalFile)
+        {
+            var file1 = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var file2 = new FileStream(canonicalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            var nodes1 = Yaml.ComposeAll(file1).ToList();
+            var nodes2 = Yaml.CanonicalComposeAll(file2).ToList();
+
+            Assert.That(nodes1.Count, Is.EqualTo(nodes2.Count));
+            foreach (var pair in nodes1.Zip(nodes2, Tuple.Create))
+                this.CompareNodes(pair.Item1, pair.Item2);
+
+            file1.Close();
+            file2.Close();
         }
     }
 }

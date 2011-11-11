@@ -13,7 +13,8 @@
         [TestCaseSource(typeof(TestFileProvider), "TestMarks")]
         public void TestMarks( string fileName)
         {
-            var inputs = new StreamReader(fileName).ReadToEnd().Split(new[] {"---\n"}, StringSplitOptions.None);
+            var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var inputs = new StreamReader(stream).ReadToEnd().Split(new[] {"---\n"}, StringSplitOptions.None);
             foreach (var input in inputs.Skip(1))
             {
                 var index = 0;
@@ -43,6 +44,7 @@
                 Assert.Less(lines[0].Length, 82);
                 Assert.AreEqual(lines[0][lines[1].Length - 1], '*');
             }
+            stream.Close();
         }
     }
 }
