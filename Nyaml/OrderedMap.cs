@@ -17,6 +17,31 @@
             this.entryList = new LinkedList<KeyValuePair<TKey, TValue>>();
         }
 
+        public override bool Equals(object other)
+        {
+            var otherMap = other as OrderedMap<TKey, TValue>;
+            if (otherMap == null || this.keyMap.Count != otherMap.keyMap.Count)
+                return false;
+            foreach (var kvp in this.entryList)
+            {
+                var key1 = kvp.Key;
+                TValue val2;
+                if (!otherMap.TryGetValue(key1, out val2) ||
+                    !kvp.Value.Equals(val2))
+                    return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.entryList.Aggregate(0, (val, kvp) =>
+            {
+                val = val << 5 + val ^ kvp.Key.GetHashCode();
+                return val << 5 + val ^ kvp.Value.GetHashCode();
+            });
+        }
+
         public void Add(TKey key, TValue value)
         {
             this.keyMap.Add(key, this.entryList.AddLast(new KeyValuePair<TKey, TValue>(key, value)));

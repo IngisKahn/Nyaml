@@ -1,6 +1,7 @@
 ﻿namespace Nyaml.Tests
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -169,6 +170,22 @@
             Assert.That(nodes1.Count, Is.EqualTo(nodes2.Count));
             foreach (var pair in nodes1.Zip(nodes2, Tuple.Create))
                 this.CompareNodes(pair.Item1, pair.Item2);
+
+            file1.Close();
+            file2.Close();
+        }
+
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonical")]
+        public void TestConstructor(string dataFile, string canonicalFile)
+        {
+            var file1 = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var file2 = new FileStream(canonicalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            var obj1 = Yaml.LoadAll(file1);
+            var obj2 = Yaml.LoadAll(file2);
+
+            Assert.That(obj1, Is.EqualTo(obj2));
 
             file1.Close();
             file2.Close();

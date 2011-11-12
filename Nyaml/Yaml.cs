@@ -99,5 +99,51 @@
             while (loader.CheckNode())
                 yield return loader.GetNode();
         }
+
+        public static object Load(string data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return Load(loader);
+        }
+
+        public static object Load(byte[] data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return Load(loader);
+        }
+
+        public static object Load(Stream stream)
+        {
+            using (var loader = new Loader(new Reader(stream)))
+                return Load(loader);
+        }
+
+        public static object Load(ILoader loader)
+        {
+            return loader.GetSingleData();
+        }
+
+        public static object LoadAll(string data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return Load(loader);
+        }
+
+        public static object LoadAll(byte[] data)
+        {
+            using (var loader = new Loader(new Reader(data)))
+                return LoadAll(loader);
+        }
+
+        public static object LoadAll(Stream stream)
+        {
+            using (var loader = new Loader(new Reader(stream)))
+                return LoadAll(loader);
+        }
+
+        public static object LoadAll(ILoader loader)
+        {
+            return loader.GetData();
+        }
     }
 }

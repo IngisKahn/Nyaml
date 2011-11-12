@@ -46,5 +46,5 @@
         }
     }
 
-    public sealed class Sequence : Sequence<ArrayList, IEnumerable> { }
+    public sealed class Sequence : Sequence<EquatableList<object>, IEnumerable> { }
 }

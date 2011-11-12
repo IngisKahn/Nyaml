@@ -13,6 +13,11 @@
             this.list = list;
         }
 
+        public EquatableList()
+        {
+            this.list = new List<T>();
+        }
+
         public override int GetHashCode()
         {
             return this.GetHashCode(EqualityComparer<object>.Default);
@@ -43,6 +48,8 @@
         {
             return ((IList)this.list).Add(value);
         }
+
+
 
         bool IList.Contains(object value)
         {
@@ -133,6 +140,12 @@
         public void Add(T item)
         {
             this.list.Add(item);
+        }
+
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+                this.Add(item);
         }
 
         public void Clear()

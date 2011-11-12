@@ -38,7 +38,7 @@
                 {
                     var key = constructor.ConstructObject(kvp.Key);
                     var value = constructor.ConstructObject(kvp.Value);
-                    dict.Add(key, value);
+                    dict.Add(key ?? Nyaml.Null.Value, value);
                 }
             return result;
         }
@@ -49,5 +49,5 @@
         }
     }
 
-    public sealed class Mapping : Mapping<Hashtable, IDictionary> { } 
+    public sealed class Mapping : Mapping<EquatableMap<object, object>, IDictionary> { } 
 }

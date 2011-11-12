@@ -50,6 +50,7 @@
     <Compile Include="Emitter.cs" />
     <Compile Include="EquatableList.cs" />
     <Compile Include="EquatableMap.cs" />
+    <Compile Include="EquatableSet.cs" />
     <Compile Include="Events\Alias.cs" />
     <Compile Include="Events\CollectionEnd.cs" />
     <Compile Include="Events\CollectionStart.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Nodes\Base.cs" />
     <Compile Include="Nodes\Scalar.cs" />
     <Compile Include="Nodes\Sequence.cs" />
+    <Compile Include="Null.cs" />
     <Compile Include="OrderedMap.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Reader.cs" />

@@ -1,9 +1,10 @@
 namespace Nyaml.Nodes
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Sequence : Collection
+    public class Sequence : Collection, IEquatable<Sequence>
     {
         public Tags.Base SequenceTag { get; set; }
 
@@ -31,15 +32,19 @@ namespace Nyaml.Nodes
 
         public override bool Equals(object obj)
         {
-            var other = obj as Sequence;
-            return base.Equals(obj) && other != null && this.content.Count == other.content.Count
-                && !this.content.Where((n, i) => n.Equals(other.content[i])).Any();
+            return this.Equals(obj as Sequence);
+        }
+
+        public bool Equals(Sequence other)
+        {
+            return base.Equals(other) && other != null && this.content.Count == other.content.Count
+                && !this.content.Where((n, i) => !n.Equals(other.content[i])).Any();
         }
 
         public override int GetHashCode()
         {
             var hash = base.GetHashCode();
-            return this.content.Aggregate(hash, (runningHash, n) => runningHash ^ n.GetHashCode());
+            return this.content.Aggregate(hash, (val, n) => val << 5 + val ^ n.GetHashCode());
         }
 
         internal override void Serialize(Serializer serializer)

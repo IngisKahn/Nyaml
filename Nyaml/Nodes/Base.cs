@@ -1,6 +1,6 @@
 ﻿namespace Nyaml.Nodes
 {
-    public abstract class Base
+    public abstract class Base 
     {
         public Mark StartMark { get; set; }
         public Mark EndMark { get; set; }

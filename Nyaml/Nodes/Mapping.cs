@@ -1,9 +1,10 @@
 namespace Nyaml.Nodes
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Mapping : Collection
+    public class Mapping : Collection, IEquatable<Mapping>
     {
         public Tags.Base MappingTag { get; set; }
 
@@ -21,10 +22,14 @@ namespace Nyaml.Nodes
 
         public override bool Equals(object obj)
         {
-            var other = obj as Mapping;
-            return base.Equals(obj) && other != null && this.content.Count == other.content.Count
+            return this.Equals(obj as Mapping);
+        }
+
+        public bool Equals(Mapping other)
+        {
+            return base.Equals(other) && other != null && this.content.Count == other.content.Count
                 && this.content.Zip(
-                    other.content, 
+                    other.content,
                     (kvp1, kvp2) => kvp1.Key.Equals(kvp2.Key) && kvp1.Value.Equals(kvp2.Value)
                     ).All(b => b);
         }
@@ -33,8 +38,12 @@ namespace Nyaml.Nodes
         {
             int hash = base.GetHashCode();
             return this.content.Aggregate(
-                                 hash, 
-                                 (runningHash, kvp) => runningHash ^ (kvp.Key.GetHashCode() ^ kvp.Value.GetHashCode())
+                                 hash,
+                                 (val, kvp) => 
+                                     { 
+                                         var val2 = val << 5 + val ^ kvp.Key.GetHashCode();
+                                         return val2 << 3 + val2 ^ kvp.Value.GetHashCode(); 
+                                     }
                                  );
         }
 

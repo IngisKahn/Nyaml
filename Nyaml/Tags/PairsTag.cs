@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Pairs : Sequence<List<Tuple<object, object>>, IEnumerable<Tuple<object, object>>>
+    public sealed class Pairs : Sequence<EquatableList<Tuple<object, object>>, IEnumerable<Tuple<object, object>>>
     {
         internal Pairs() : base("tag:yaml.org,2002:pairs")
         { }
@@ -19,12 +19,12 @@
                 .All(map => map != null && map.Content.Count == 1);
         }
 
-        protected override List<Tuple<object, object>> Construct(Nodes.Base node, Constructor constructor)
+        protected override EquatableList<Tuple<object, object>> Construct(Nodes.Base node, Constructor constructor)
         {
-            return ((Nodes.Sequence) node).Content
+            return new EquatableList<Tuple<object, object>>(((Nodes.Sequence)node).Content
                 .Select(item => ((Nodes.Mapping) item).Content.First())
-                .Select(kvp => Tuple.Create((object)kvp.Key, (object)kvp.Value))
-                .ToList();
+                .Select(kvp => Tuple.Create(constructor.ConstructObject(kvp.Key), constructor.ConstructObject(kvp.Value)))
+                .ToList());
         }
 
         public override Nodes.Base Represent(IEnumerable<Tuple<object, object>> value, Representer representer)

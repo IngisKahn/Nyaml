@@ -13,6 +13,11 @@
             this.map = map;
         }
 
+        public EquatableMap()
+        {
+            this.map = new Dictionary<TKey, TValue>();
+        }
+
         public bool Equals(object other, IEqualityComparer comparer)
         {
             var otherMap = other as IDictionary<TKey, TValue>;

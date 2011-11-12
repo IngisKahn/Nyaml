@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class OrderedMap : Sequence<List<IDictionary>, IDictionary>
+    public sealed class OrderedMap : Sequence<EquatableList<IDictionary>, IDictionary>
     {
         internal OrderedMap() : base("tag:yaml.org,2002:omap")
         { }
@@ -27,10 +27,10 @@
             return true;
         }
 
-        protected override List<IDictionary> Construct(Nodes.Base node, Constructor constructor)
+        protected override EquatableList<IDictionary> Construct(Nodes.Base node, Constructor constructor)
         {
             var content = ((Nodes.Sequence)node).Content;
-            var om = new List<IDictionary>(content.Count);
+            var om = new EquatableList<IDictionary>();
             om.AddRange(content.OfType<Nodes.Mapping>()
                 .Select(m => m.Content.First())
                 .Select(e => new Hashtable { { constructor.ConstructObject(e.Key), constructor.ConstructObject(e.Value) } }));

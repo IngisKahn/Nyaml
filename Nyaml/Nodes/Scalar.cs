@@ -1,6 +1,8 @@
 namespace Nyaml.Nodes
 {
-    public class Scalar : Base
+    using System;
+
+    public class Scalar : Base , IEquatable<Scalar>
     {
         // public string Value { get; set; }
         public Style Style { get; set; }
@@ -39,10 +41,14 @@ namespace Nyaml.Nodes
 
         public override bool Equals(object obj)
         {
+            return this.Equals(obj as Scalar);
+        }
+
+        public bool Equals(Scalar other)
+        {
             var cannon = ((Tags.IScalar)this.ScalarTag).CanonicalFormatter;
-            var other = obj as Scalar;
             return other != null
-                && base.Equals(obj)
+                && base.Equals(other)
                 && cannon(this.Content) == cannon(other.Content);
         }
 

@@ -1,10 +1,9 @@
 ﻿namespace Nyaml.Tags
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Set : Mapping<HashSet<object>, ISet<object>>
+    public sealed class Set : Mapping<EquatableSet<object>, ISet<object>>
     {
         internal Set() : base("tag:yaml.org,2002:set")
         { }
@@ -17,10 +16,10 @@
             return node.Content.Values.All(v => v == null);
         }
 
-        protected override HashSet<object> Construct(Nodes.Base node, Constructor constructor)
+        protected override EquatableSet<object> Construct(Nodes.Base node, Constructor constructor)
         {
             var mnode = (Nodes.Mapping) node;
-            var set = new HashSet<object>();
+            var set = new EquatableSet<object>();
             foreach (var key in mnode.Content.Keys)
                 set.Add(constructor.ConstructObject(key));
             return set;
