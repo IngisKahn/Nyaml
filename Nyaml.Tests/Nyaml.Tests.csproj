@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanonicalTests.cs" />
+    <Compile Include="ErrorTests.cs" />
     <Compile Include="MarkTest.cs" />
     <Compile Include="ReaderTests.cs" />
     <Compile Include="StructureParser.cs" />
@@ -372,12 +373,6 @@
     <None Include="Data\empty-documents.single-loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\empty-python-module.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\empty-python-name.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Data\empty-tag-handle.emitter-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -522,36 +517,6 @@
     <None Include="Data\invalid-pairs-3.loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\invalid-python-bytes-2-py3.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-bytes-py3.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-module-kind.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-module-value.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-module.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-name-kind.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-name-module-2.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-name-module.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-name-object.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\invalid-python-name-value.loader-error">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Data\invalid-simple-key.loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -603,7 +568,7 @@
     <None Include="Data\invalid-utf8-byte.loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\invalid-utf8-byte.stream-errorUNUSED">
+    <None Include="Data\invalid-utf8-byte.stream-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\invalid-yaml-directive-version-1.loader-error">
@@ -690,7 +655,7 @@
     <None Include="Data\null.detect">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\odd-utf16.stream-errorUNUSED">
+    <None Include="Data\odd-utf16.stream-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\recursive-anchor.former-loader-error">
@@ -1689,7 +1654,7 @@
     <None Include="Data\timestamp.detect">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\unacceptable-key.loader-error">
+    <None Include="Data\unacceptable-key.loader-errorUNUSED">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\unclosed-bracket.loader-error">
@@ -1701,7 +1666,7 @@
     <None Include="Data\undefined-anchor.loader-error">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\undefined-constructor.loader-error">
+    <None Include="Data\undefined-constructor.loader-errorUNUSED">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\undefined-tag-handle.loader-error">

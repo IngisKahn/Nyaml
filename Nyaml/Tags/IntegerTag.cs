@@ -12,7 +12,7 @@
             this.Name = "tag:yaml.org,2002:int";
         }
         
-        static readonly Regex intExpression = new Regex(@"^[-+]?(0b[01_]+|0[0-7_]+|[1-9][0-9_]*|0x[0-9a-fA-F_]+|[1-9][0-9_]*(:[0-5]?[0-9])+)$", RegexOptions.Compiled);
+        static readonly Regex intExpression = new Regex(@"^[-+]?(0b[01_]+|0[0-7_]*|[1-9][0-9_]*|0x[0-9a-fA-F_]+|[1-9][0-9_]*(:[0-5]?[0-9])+)$", RegexOptions.Compiled);
 
         public override System.Func<string, string> CanonicalFormatter
         {

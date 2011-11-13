@@ -318,7 +318,7 @@
 
         private void SavePossibleSimpleKey()
         {
-            var isRequired = this.flowLevel > 0 && this.indentLevel == this.Column;
+            var isRequired = this.flowLevel == 0 && this.indentLevel == this.Column;
 
             Debug.Assert(this.allowSimpleKey || !isRequired);
 
@@ -1438,9 +1438,9 @@
             string value;
             try
             {
-                value = Encoding.UTF8.GetString(codes.ToArray());
+                value = Encoding.GetEncoding("utf-8", new EncoderReplacementFallback(), new DecoderExceptionFallback()).GetString(codes.ToArray());
             }
-            catch (Exception e)
+            catch (DecoderFallbackException e)
             {
                 throw new Error("while scanning a " + name, start,
                                     e.Message, this.Mark);

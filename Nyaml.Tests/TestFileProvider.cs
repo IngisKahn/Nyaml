@@ -72,6 +72,14 @@
             }
         }
 
+        public static IEnumerable<object[]> TestLoaderError
+        {
+            get
+            {
+                return GetFilesPerTest(new[] { ".loader-error" });
+            }
+        }
+
         public static IEnumerable<object[]> TestDataAndCanonical
         {
             get { return GetFilesPerTest(new[] { ".data", ".canonical" }); }

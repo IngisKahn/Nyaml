@@ -3,6 +3,15 @@
     using System;
     using System.Collections.Generic;
 
+    [Serializable]
+    public class Error : MarkedYamlError
+    {
+        public Error(string context = null, Mark contextMark = null,
+        string problem = null, Mark problemMark = null, string note = null)
+            : base(context, contextMark, problem, problemMark, note)
+        { }
+    }
+
     public abstract class Base
     {
         private readonly Dictionary<Type, Tags.Base> tagsByType =
@@ -15,7 +24,12 @@
         {
             Tags.Base result;
             if (name != null)
-                this.tags.TryGetValue(name, out result);
+            {
+                if (!this.tags.TryGetValue(name, out result))
+                {
+                 //   throw new Error("could not find definition of tag: " + name);
+                }
+            }
             else
                 result = null;
             return result;
@@ -61,7 +75,13 @@
             {
                 tag = node.Tag as Tags.Nonspecific;
                 if (tag == null) // if we already have specific tag...
+                {
+                    // ensure it is valid
+                    if (!node.Tag.Validate(node))
+                        throw new Error("failed validating a node tag: " + node.Tag.Name,
+                            node.StartMark);
                     return node.Tag;
+                }
 
                 if (tag.Name == "!")
                 {

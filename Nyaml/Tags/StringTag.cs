@@ -14,7 +14,7 @@
 
         public override bool Validate(Nodes.Scalar node)
         {
-            return true;
+            return node != null;
         }
 
         protected override string Construct(Nodes.Base node, Constructor constructor)

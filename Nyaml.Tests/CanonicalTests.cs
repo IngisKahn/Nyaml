@@ -29,15 +29,15 @@
             file.Close();
         }
 
-        //[Test]
-        //[TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonicalNotEmpty")]
-        //public void TestCanonicalError(string dataFile, string canonicalFile)
-        //{
-        //    var file = new FileStream(canonicalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        //    var data = new StreamReader(file).ReadToEnd();
-        //    var tokens = Yaml.CanonicalScan(data).ToList();
-        //    Assert.That(tokens, Is.Not.Null);
-        //    file.Close();
-        //}
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestDataAndCanonicalNotEmpty")]
+        public void TestCanonicalError(string dataFile, string canonicalFile)
+        {
+            using (var file = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var data = new StreamReader(file).ReadToEnd();
+                Assert.Throws<Canonical.Error>(() => Yaml.CanonicalLoadAll(data).ToArray());
+            }
+        }
     }
 }

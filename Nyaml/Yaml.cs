@@ -7,50 +7,58 @@
     {
         public static IEnumerable<Tokens.Base> Scan(string data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return Scan(loader);
+            return Scan(new Loader(new Reader(data)), true);
         }
 
         public static IEnumerable<Tokens.Base> Scan(byte[] data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return Scan(loader);
+            return Scan(new Loader(new Reader(data)), true);
         }
 
         public static IEnumerable<Tokens.Base> Scan(Stream stream)
         {
-            using (var loader = new Loader(new Reader(stream)))
-                return Scan(loader);
+            return Scan(new Loader(new Reader(stream)), true);
+        }
+
+        internal static IEnumerable<Tokens.Base> Scan(ILoader loader, bool dispose)
+        {
+            while (loader.CheckToken())
+                yield return loader.GetToken();
+            if (dispose)
+                loader.Dispose();
         }
 
         public static IEnumerable<Tokens.Base> Scan(ILoader loader)
         {
-            while (loader.CheckToken())
-                yield return loader.GetToken();
+            return Scan(loader, false);
         }
 
         public static IEnumerable<Events.Base> Parse(string data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return Parse(loader);
+            return Parse(new Loader(new Reader(data)), true);
         }
 
         public static IEnumerable<Events.Base> Parse(byte[] data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return Parse(loader);
+            return Parse(new Loader(new Reader(data)), true);
         }
 
         public static IEnumerable<Events.Base> Parse(Stream stream)
         {
-            using (var loader = new Loader(new Reader(stream)))
-                return Parse(loader);
+            return Parse(new Loader(new Reader(stream)), true);
+        }
+
+        internal static IEnumerable<Events.Base> Parse(ILoader loader, bool dispose)
+        {
+            while (loader.CheckEvent())
+                yield return loader.GetEvent();
+            if (dispose)
+                loader.Dispose();
         }
 
         public static IEnumerable<Events.Base> Parse(ILoader loader)
         {
-            while (loader.CheckEvent())
-                yield return loader.GetEvent();
+            return Parse(loader, false);
         }
 
         public static Nodes.Base Compose(string data)
@@ -78,26 +86,30 @@
 
         public static IEnumerable<Nodes.Base> ComposeAll(string data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return ComposeAll(loader);
+            return ComposeAll(new Loader(new Reader(data)));
         }
 
         public static IEnumerable<Nodes.Base> ComposeAll(byte[] data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return ComposeAll(loader);
+            return ComposeAll(new Loader(new Reader(data)));
         }
 
         public static IEnumerable<Nodes.Base> ComposeAll(Stream stream)
         {
-            using (var loader = new Loader(new Reader(stream)))
-                return ComposeAll(loader);
+            return ComposeAll(new Loader(new Reader(stream)));
+        }
+
+        internal static IEnumerable<Nodes.Base> ComposeAll(ILoader loader, bool dispose)
+        {
+            while (loader.CheckNode())
+                yield return loader.GetNode();
+            if (dispose)
+                loader.Dispose();
         }
 
         public static IEnumerable<Nodes.Base> ComposeAll(ILoader loader)
         {
-            while (loader.CheckNode())
-                yield return loader.GetNode();
+            return ComposeAll(loader, false);
         }
 
         public static object Load(string data)
@@ -123,27 +135,30 @@
             return loader.GetSingleData();
         }
 
-        public static object LoadAll(string data)
+        public static IEnumerable<object> LoadAll(string data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return Load(loader);
+            return LoadAll(new Loader(new Reader(data)), true);
         }
 
-        public static object LoadAll(byte[] data)
+        public static IEnumerable<object> LoadAll(byte[] data)
         {
-            using (var loader = new Loader(new Reader(data)))
-                return LoadAll(loader);
+            return LoadAll(new Loader(new Reader(data)), true);
         }
 
-        public static object LoadAll(Stream stream)
+        public static IEnumerable<object> LoadAll(Stream stream)
         {
-            using (var loader = new Loader(new Reader(stream)))
-                return LoadAll(loader);
+            return LoadAll(new Loader(new Reader(stream)), true);
         }
 
-        public static object LoadAll(ILoader loader)
+        internal static IEnumerable<object> LoadAll(ILoader loader, bool dispose)
         {
-            return loader.GetData();
+            while (loader.CheckData())
+                yield return loader.GetData();
+        }
+
+        public static IEnumerable<object> LoadAll(ILoader loader)
+        {
+            return LoadAll(loader, false);
         }
     }
 }

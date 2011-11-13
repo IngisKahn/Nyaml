@@ -61,9 +61,8 @@
         {
             this.name = "<unicode string>";
             this.buffer = new StringBuilder(data);
-            this.Encoding = Encoding.Unicode;
+            this.Encoding = Encoding.GetEncoding("utf-16", new EncoderExceptionFallback(), new DecoderExceptionFallback());
             this.CheckPrintable(data);
-            this.Encoding = Encoding.Unicode;
             this.buffer.Append('\0');
             this.isEof = true;
         }
@@ -72,14 +71,14 @@
         {
             this.name = "<byte string>";
             this.memoryStream = new MemoryStream(data);
-            this.streamReader = new StreamReader(this.memoryStream, Encoding.UTF8);
+            this.streamReader = new StreamReader(this.memoryStream, Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback()));
             this.buffer = new StringBuilder();
             this.DetermineEncoding();
         }
 
         public Reader(Stream stream)
         {
-            this.streamReader = new StreamReader(stream, Encoding.UTF8);
+            this.streamReader = new StreamReader(stream, Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback()));
             this.name = "<stream>";
             this.buffer = new StringBuilder();
             this.DetermineEncoding();
@@ -129,8 +128,15 @@
             get
             {
                 if (this.streamReader == null)
-                    return new Mark { Name = this.name, Index = this.Index, Line = this.Line,
-                                      Column = this.Column, Buffer = this.buffer, Pointer = this.pointer };
+                    return new Mark
+                           {
+                               Name = this.name,
+                               Index = this.Index,
+                               Line = this.Line,
+                               Column = this.Column,
+                               Buffer = new StringBuilder(this.buffer.ToString()),
+                               Pointer = this.pointer
+                           };
                 return new Mark { Name = this.name, Index = this.Index, Line = this.Line, Column = this.Column };
             }
         }
@@ -173,7 +179,15 @@
         private void UpdateRaw(int size = 4096)
         {
             var temp = new char[size];
-            var read = this.streamReader.ReadBlock(temp, 0, size);
+            int read;
+            try
+            {
+                read = this.streamReader.ReadBlock(temp, 0, size);
+            }
+            catch (DecoderFallbackException e)
+            {
+                throw new YamlError("decoder error: " + e.Message);
+            }
             this.buffer.Append(temp, 0, read);
             if (read < size)
                 this.isEof = true;

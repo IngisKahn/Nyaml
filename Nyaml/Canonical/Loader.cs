@@ -30,26 +30,22 @@
     {
         public static IEnumerable<Tokens.Base> CanonicalScan(string data)
         {
-            using (var loader = new Canonical.Loader(data))
-                return Scan(loader);
+            return Scan(new Canonical.Loader(data), true);
         }
 
         public static IEnumerable<Tokens.Base> CanonicalScan(Stream stream)
         {
-            using (var loader = new Canonical.Loader(stream))
-                return Scan(loader);
+            return Scan(new Canonical.Loader(stream), true);
         }
 
         public static IEnumerable<Events.Base> CanonicalParse(string data)
         {
-            using (var loader = new Canonical.Loader(data))
-                return Parse(loader);
+            return Parse(new Canonical.Loader(data), true);
         }
 
         public static IEnumerable<Events.Base> CanonicalParse(Stream stream)
         {
-            using (var loader = new Canonical.Loader(stream))
-                return Parse(loader);
+            return Parse(new Canonical.Loader(stream), true);
         }
 
         public static Nodes.Base CanonicalCompose(string data)
@@ -66,14 +62,34 @@
 
         public static IEnumerable<Nodes.Base> CanonicalComposeAll(string data)
         {
-            using (var loader = new Canonical.Loader(data))
-                return ComposeAll(loader);
+            return ComposeAll(new Canonical.Loader(data), true);
         }
 
         public static IEnumerable<Nodes.Base> CanonicalComposeAll(Stream stream)
         {
+            return ComposeAll(new Canonical.Loader(stream), true);
+        }
+
+        public static object CanonicalLoad(string data)
+        {
+            using (var loader = new Canonical.Loader(data))
+                return Load(loader);
+        }
+
+        public static object CanonicalLoad(Stream stream)
+        {
             using (var loader = new Canonical.Loader(stream))
-                return ComposeAll(loader);
+                return Load(loader);
+        }
+
+        public static IEnumerable<object> CanonicalLoadAll(string data)
+        {
+            return LoadAll(new Canonical.Loader(data), true);
+        }
+
+        public static IEnumerable<object> CanonicalLoadAll(Stream stream)
+        {
+            return LoadAll(new Canonical.Loader(stream), true);
         }
     }
 }
