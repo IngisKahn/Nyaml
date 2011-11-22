@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     public static partial class Yaml
     {
@@ -159,6 +160,34 @@
         public static IEnumerable<object> LoadAll(ILoader loader)
         {
             return LoadAll(loader, false);
+        }
+
+        public static void Emit(IEnumerable<Events.Base> events, IDumper dumper)
+        {
+            foreach (var @event in events)
+                dumper.Emit(@event);
+        }
+
+        public static string Emit(IEnumerable<Events.Base> events,
+            bool isCanonical = false, int indent = 2, int width = 80,
+            bool allowUnicode = true, LineBreak lineBreak = LineBreak.LineFeed)
+        {
+            using (var stream = new MemoryStream(1024))
+            {
+                Emit(events, stream, isCanonical, indent, width, allowUnicode, lineBreak);
+                stream.Seek(0, SeekOrigin.Begin);
+                using (var reader = new StreamReader(stream))
+                    return reader.ReadToEnd();
+            }
+        }
+
+        public static void Emit(IEnumerable<Events.Base> events, Stream stream,
+            bool isCanonical = false, int indent = 2, int width = 80,
+            bool allowUnicode = true, LineBreak lineBreak = LineBreak.LineFeed)
+        {
+            var dumper = new Dumper(stream, isCanonical, indent, width, allowUnicode,
+                                    lineBreak);
+            Emit(events, dumper);
         }
     }
 }

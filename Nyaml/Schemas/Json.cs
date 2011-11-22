@@ -21,6 +21,7 @@
             var floatTag = new Tags.FloatingPoint();
             this.AddTag(floatTag);
             this.AddTagType<float>(floatTag);
+            this.AddTag(new Tags.Yaml(), false);
         }
 
         static readonly Regex intExpression = 

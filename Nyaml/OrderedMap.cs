@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Collections.Generic;
 
-    public interface IOrderedMap : IDictionary { }
-
     public class OrderedMap<TKey, TValue> : IDictionary<TKey, TValue>, IOrderedMap, IEnumerable<IDictionary>
     {
         private readonly Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> keyMap;

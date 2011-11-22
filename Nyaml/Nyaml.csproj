@@ -47,6 +47,7 @@
     <Compile Include="Canonical\Scanner.cs" />
     <Compile Include="Composer.cs" />
     <Compile Include="Constructor.cs" />
+    <Compile Include="Dumper.cs" />
     <Compile Include="Emitter.cs" />
     <Compile Include="EquatableList.cs" />
     <Compile Include="EquatableMap.cs" />
@@ -66,7 +67,16 @@
     <Compile Include="Events\StreamEnd.cs" />
     <Compile Include="Events\StreamStart.cs" />
     <Compile Include="FlowStyle.cs" />
+    <Compile Include="IComposer.cs" />
+    <Compile Include="IConstructor.cs" />
+    <Compile Include="IDumper.cs" />
+    <Compile Include="IEmitter.cs" />
+    <Compile Include="ILoader.cs" />
+    <Compile Include="IOrderedMap.cs" />
+    <Compile Include="IReader.cs" />
+    <Compile Include="IScanner.cs" />
     <Compile Include="Kind.cs" />
+    <Compile Include="LineBreak.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Mark.cs" />
     <Compile Include="MarkedYamlError.cs" />
@@ -107,6 +117,7 @@
     <Compile Include="Tags\Base.cs" />
     <Compile Include="Tags\TimestampTag.cs" />
     <Compile Include="Tags\ValueTag.cs" />
+    <Compile Include="Tags\Yaml.cs" />
     <Compile Include="Tokens\Alias.cs" />
     <Compile Include="Tokens\Anchor.cs" />
     <Compile Include="Tokens\BlockEnd.cs" />

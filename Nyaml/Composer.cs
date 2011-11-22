@@ -3,15 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IComposer
-    {
-        bool CheckNode();
-
-        Nodes.Base GetNode();
-
-        Nodes.Base GetSingleNode();
-    }
-
     public class Composer : IComposer
     {
         [Serializable]

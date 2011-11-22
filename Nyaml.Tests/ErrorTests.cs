@@ -1,7 +1,9 @@
 ﻿namespace Nyaml.Tests
 {
+    using System;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -23,7 +25,17 @@
         {
             using (var file = new FileStream(errorFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                Assert.Catch<YamlError>(() => Yaml.LoadAll(new StreamReader(file).ReadToEnd()).ToArray());
+                Assert.Catch<Exception>(() => Yaml.LoadAll(new StreamReader(file, Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback())).ReadToEnd()).ToArray());
+            }
+        }
+
+        [Test]
+        [TestCaseSource(typeof(TestFileProvider), "TestLoaderErrorSingle")]
+        public void TestLoaderErrorSingle(string errorFile)
+        {
+            using (var file = new FileStream(errorFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                Assert.Catch<YamlError>(() => Yaml.Load(new StreamReader(file).ReadToEnd()));
             }
         }
     }

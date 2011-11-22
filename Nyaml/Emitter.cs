@@ -7,19 +7,6 @@
     using System.Linq;
     using System.Text;
 
-    public enum LineBreak
-    {
-        CarriageReturn,
-        LineFeed,
-        CarriageReturnLineFeed
-    }
-
-    public interface IEmitter
-    {
-        void Reset();
-        void Emit(Events.Base @event);
-    }
-
     public class Emitter : IEmitter
     {
         [Serializable]
@@ -128,12 +115,16 @@
         public void Emit(Events.Base @event)
         {
             this.events.Enqueue(@event);
+            var emitted = false;
             while (!this.NeedMoreEvents)
             {
                 this.currentEvent = this.events.Dequeue();
                 this.state();
                 this.currentEvent = null;
+                emitted = true;
             }
+            if (emitted && this.writer != null)
+                this.writer.Flush();
         }
 
         private bool NeedMoreEvents
@@ -212,7 +203,8 @@
             var start = this.currentEvent as Events.DocumentStart;
             if (start != null)
             {
-                if ((start.Version != null || start.Tags.Count > 0) && this.isOpenEnded)
+                var hasTags = start.Tags != null && start.Tags.Count != 0;
+                if ((start.Version != null || hasTags) && this.isOpenEnded)
                 {
                     this.WriteIndicator("...", true);
                     this.WriteIndent();
@@ -220,7 +212,7 @@
                 if (start.Version != null)
                     this.WriteVersionDirective(PrepareVersion(start.Version));
                 this.tagPrefixes = new Dictionary<string, string>(defaultTagPrefixes);
-                if (start.Tags.Count != 0)
+                if (hasTags)
                     foreach (var kvp in start.Tags)
                     {
                         var handle = kvp.Key;
@@ -231,7 +223,7 @@
                         this.WriteTagDirective(handleText, prefixText);
                     }
                 if (!isFirst || start.IsExplicit || this.isCanonical ||
-                     start.Version != null || start.Tags.Count > 0 ||
+                     start.Version != null || hasTags ||
                      this.CheckEmptyDocumnet())
                 {
                     this.WriteIndent();
@@ -243,19 +235,16 @@
                 return;
             }
             var end = this.currentEvent as Events.StreamEnd;
-            if (end != null)
-            {
-                if (this.isOpenEnded)
-                {
-                    this.WriteIndicator("...", true);
-                    this.WriteIndent();
-                }
-                // this.WriteStreamEnd();
-                this.writer.Flush();
-                this.state = this.ExpectNothing;
-            }
-            else
+            if (end == null)
                 throw new Error("expected DocumnetStart event, but got " + this.currentEvent);
+            if (this.isOpenEnded)
+            {
+                this.WriteIndicator("...", true);
+                this.WriteIndent();
+            }
+            // this.WriteStreamEnd();
+            this.writer.Flush();
+            this.state = this.ExpectNothing;
         }
 
         private void ExpectDocumentEnd()
@@ -305,7 +294,7 @@
             if (ce is Events.SequenceStart)
             {
                 if (this.flowLevel != 0 || this.isCanonical
-                    || ce.FlowStyle != FlowStyle.None || this.CheckEmptySequence())
+                    || ce.FlowStyle == FlowStyle.Flow || this.CheckEmptySequence())
                     this.ExpectFlowSequence();
                 else
                     this.ExpectBlockSequence();
@@ -640,7 +629,7 @@
             var tag = scalarEvent != null ? scalarEvent.Tag : collectionEvent.Tag;
             if (scalarEvent != null)
             {
-                if (scalarEvent.Style == Style.Plain)
+                if (this.style == Style.Plain)
                     this.style = this.ChooseScalarStyle();
                 if ((!this.isCanonical || tag == null)
                     && ((this.style == Style.Plain && scalarEvent.ImplicitLevel == ScalarImplicitLevel.Plain)
@@ -817,7 +806,7 @@
                 chunks.Append(suffix.Substring(start, end - start));
             return string.IsNullOrEmpty(handle)
                        ? string.Format("!<{0}>", chunks)
-                       : string.Format("{0}.{1}", handle, chunks);
+                       : string.Format("{0}{1}", handle, chunks);
         }
 
         private static string PrepareAnchor(string anchor)
@@ -1076,7 +1065,7 @@
                     {
                         if (text[start] == '\n')
                             this.WriteLineBreak();
-                        for (var i = start; i <= end; i++)
+                        for (var i = start; i <= end - 1; i++)
                         {
                             var br = text[i];
                             if (br == '\n')
@@ -1140,23 +1129,29 @@
             this.WriteIndicator("\"", true);
             var start = 0;
             var end = 0;
+
+            // for each char in text plus one pass at the end
             while (end <= text.Length)
             {
                 char? ch = null;
                 if (end < text.Length)
                     ch = text[end];
+                // if this is the last pass or this char isn't printable
                 if (ch == null || "\"\\\x85\u2028\u2029\uFEFF".IndexOf((char)ch) != -1
                     || !((ch >= '\x20' && ch <= '\x7E')
-                    || (this.allowUnicode && ((ch >= '\xA0' && ch <= '\uD7FF')
-                    || (ch >= '\uE000' && ch <= '\uFFFD')))))
+                         || (this.allowUnicode && ((ch >= '\xA0' && //ch <= '\uD7FF')
+                         // || (ch >= '\uE000' && 
+                                               ch <= '\uFFFD')))))
                 {
+                    // if we have any of the previous string to print out, do it
                     if (start < end)
                     {
                         var data = text.Substring(start, end - start);
-                        this.column += end - start;
+                        this.column += text.Length;
                         this.writer.Write(data);
                         start = end;
                     }
+                    // if this isn't the last pass then write the escape code
                     if (ch != null)
                     {
                         char e;
@@ -1172,10 +1167,13 @@
                         start = end + 1;
                     }
                 }
-                if (end > 0 && end < text.Length - 1 && (ch == ' ' || start >= end)
-                    && this.column + (end - start) > this.bestWidth && split)
+                if (end > 0 // not the first char
+                    && end < text.Length - 1 // not the last char
+                    && (ch == ' ' || start >= end) // space or we just printed a string
+                    && this.column + (end - start) > this.bestWidth // we are past our desired column length
+                    && split) // we are allowed to split
                 {
-                    var data = text.Substring(start, end - start) + "\\";
+                    var data = text.Substring(start, Math.Max(end - start, 0)) + "\\";
                     if (start < end)
                         start = end;
                     this.column += data.Length;
@@ -1231,10 +1229,10 @@
                 {
                     if (ch == null || "\n\x85\u2028\u2029".IndexOf((char)ch) == -1)
                     {
-                        if (!leadingSpace && ch != null && ch != ' ' && text[start] == '\n')
+                        if (!leadingSpace && ch != null && ch != ' ' && ch != '\t' && text[start] == '\n')
                             this.WriteLineBreak();
-                        leadingSpace = ch == ' ';
-                        for (int i = start; i <= end; i++)
+                        leadingSpace = ch == ' ' || ch == '\t';
+                        for (var i = start; i <= Math.Min(end - 1, text.Length - 1); i++)
                         {
                             var br = text[i];
                             if (br == '\n')
@@ -1249,7 +1247,7 @@
                 }
                 else if (spaces)
                 {
-                    if (ch != ' ')
+                    if (ch != ' ' && ch != '\t')
                     {
                         if (start + 1 == end && this.column > this.bestWidth)
                             this.WriteIndent();
@@ -1274,7 +1272,7 @@
                 if (ch != null)
                 {
                     breaks = "\n\x85\u2028\u2029".IndexOf((char) ch) != -1;
-                    spaces = ch == ' ';
+                    spaces = ch == ' ' || ch == '\t';
                 }
                 end++;
             }
@@ -1299,7 +1297,7 @@
                 {
                     if (ch == null || "\n\x85\u2028\u2029".IndexOf((char)ch) == -1)
                     {
-                        for (var i = start; i <= end; i++)
+                        for (var i = start; i <= Math.Min(end - 1, text.Length - 1); i++)
                         {
                             var br = text[i];
                             if (br == '\n')
@@ -1312,7 +1310,7 @@
                         start = end;
                     }
                 }
-                else if (ch == null || " \n\x85\u2028\u2029".IndexOf((char)ch) != -1)
+                else if (ch == null || "\n\x85\u2028\u2029".IndexOf((char)ch) != -1)
                 {
                     var data = text.Substring(start, end - start);
                     this.writer.Write(data);
@@ -1373,7 +1371,7 @@
                     {
                         if (text[start] == '\n')
                             this.WriteLineBreak();
-                        for (var i = start; i <= end; i++)
+                        for (var i = start; i < end; i++)
                         {
                             var br = text[i];
                             if (br == '\n')

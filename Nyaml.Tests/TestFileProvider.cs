@@ -2,13 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     
     public static class TestFileProvider
     {
-        private static IDictionary<string, HashSet<string>> TestDocuments
+        private static IEnumerable<KeyValuePair<string, HashSet<string>>> TestDocuments
         {
             get
             {
@@ -78,6 +77,19 @@
             {
                 return GetFilesPerTest(new[] { ".loader-error" });
             }
+        }
+
+        public static IEnumerable<object[]> TestLoaderErrorSingle
+        {
+            get
+            {
+                return GetFilesPerTest(new[] { ".single-loader-error" });
+            }
+        }
+
+        public static IEnumerable<object[]> TestDataAndDetect
+        {
+            get { return GetFilesPerTest(new[] { ".data", ".detect" }); }
         }
 
         public static IEnumerable<object[]> TestDataAndCanonical

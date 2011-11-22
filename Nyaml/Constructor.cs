@@ -3,15 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IConstructor
-    {
-        bool CheckData();
-
-        object GetData();
-
-        object GetSingleData();
-    }
-
     public class Constructor : IConstructor
     {
         [Serializable]

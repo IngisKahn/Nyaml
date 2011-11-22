@@ -3,27 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Numerics;
     using System.Text;
     using System.Text.RegularExpressions;
-    
-    public interface IReader : IDisposable
-    {
-        char Peek(int index = 0);
-
-        string Prefix(int length = 1);
-
-        void Forward(int length = 1);
-
-        Mark Mark { get; }
-
-        int Index { get; }
-
-        int Line { get; }
-
-        int Column { get; }
-
-        Encoding Encoding { get; }
-    }
 
     public class Reader : IReader
     {
@@ -186,7 +168,7 @@
             }
             catch (DecoderFallbackException e)
             {
-                throw new YamlError("decoder error: " + e.Message);
+                throw new Error("decoder error", e.Index, (int)new BigInteger(e.BytesUnknown), this.Encoding.ToString(), e.Message);
             }
             this.buffer.Append(temp, 0, read);
             if (read < size)

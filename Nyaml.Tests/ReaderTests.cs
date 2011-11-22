@@ -26,7 +26,7 @@
             {
                 RunReader(stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                RunReader(new BinaryReader(stream).ReadBytes((int)stream.Length));
+                RunReader(new BinaryReader(stream, Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback())).ReadBytes((int)stream.Length));
                 stream.Seek(0, SeekOrigin.Begin);
                 //Encoding encoding = Encoding.ASCII;
                 //string data = null;

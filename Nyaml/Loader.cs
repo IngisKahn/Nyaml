@@ -1,8 +1,5 @@
 ﻿namespace Nyaml
 {
-    public interface ILoader : IReader, IScanner, IParser, IComposer, IConstructor
-    { }
-
     public class Loader : ILoader
     {
         private readonly IReader reader;

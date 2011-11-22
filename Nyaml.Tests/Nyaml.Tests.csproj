@@ -42,11 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanonicalTests.cs" />
+    <Compile Include="EmitterTests.cs" />
     <Compile Include="ErrorTests.cs" />
     <Compile Include="MarkTest.cs" />
     <Compile Include="ReaderTests.cs" />
     <Compile Include="StructureParser.cs" />
     <Compile Include="StructureTests.cs" />
+    <Compile Include="TagTests.cs" />
     <Compile Include="TestFileProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenTests.cs" />
@@ -655,7 +657,7 @@
     <None Include="Data\null.detect">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\odd-utf16.stream-error">
+    <None Include="Data\odd-utf16.stream-errorUNUSED">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\recursive-anchor.former-loader-error">
